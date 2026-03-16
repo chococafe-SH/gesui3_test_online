@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "324909852889",
+    "project_id": "gesui3-test-project",
+    "storage_bucket": "gesui3-test-project.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:324909852889:android:532755a7817834d83376c8",
+        "android_client_info": {
+          "package_name": "com.example.gesui3_test_online"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBOKrKD35ZRF-5lst6HVVTSTgleXnVgzQg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

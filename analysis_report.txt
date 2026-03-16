@@ -1,0 +1,82 @@
+Analyzing gesui3_test_online...                                 
+
+warning - Unused import: '../../core/repositories/user_repository_provider.dart' - lib\features\history\history_provider.dart:2:8 - unused_import
+  error - The name 'Timestamp' isn't a type, so it can't be used in an 'as' expression - lib\features\history\history_screen.dart:35:54 - cast_to_non_type
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\history\history_screen.dart:66:52 - deprecated_member_use
+  error - Undefined name 'sampleQuestionsProvider' - lib\features\home\home_screen.dart:45:44 - undefined_identifier
+  error - Undefined name 'quizNotifierProvider' - lib\features\home\home_screen.dart:46:26 - undefined_identifier
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\home\home_screen.dart:77:58 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\home\home_screen.dart:172:30 - deprecated_member_use
+  error - Expected to find ')' - lib\features\home\home_screen.dart:174:15 - expected_token
+  error - The named parameter 'child' isn't defined - lib\features\home\home_screen.dart:175:15 - undefined_named_parameter
+  error - Expected an identifier - lib\features\home\home_screen.dart:188:11 - missing_identifier
+  error - Expected to find ')' - lib\features\home\home_screen.dart:188:11 - expected_token
+  error - Expected to find ';' - lib\features\home\home_screen.dart:190:7 - expected_token
+warning - Dead code - lib\features\home\home_screen.dart:190:8 - dead_code
+  error - Expected an identifier - lib\features\home\home_screen.dart:190:8 - missing_identifier
+  error - Expected to find ';' - lib\features\home\home_screen.dart:190:8 - expected_token
+  error - Unexpected text ';' - lib\features\home\home_screen.dart:190:8 - unexpected_token
+  error - Expected an identifier - lib\features\home\home_screen.dart:191:5 - missing_identifier
+  error - Unexpected text ';' - lib\features\home\home_screen.dart:191:5 - unexpected_token
+   info - Unnecessary empty statement - lib\features\home\home_screen.dart:191:6 - empty_statements
+  error - The named parameter 'activeColorPrimary' isn't defined - lib\features\home\main_screen.dart:20:13 - undefined_named_parameter
+  error - The named parameter 'inactiveColorPrimary' isn't defined - lib\features\home\main_screen.dart:21:13 - undefined_named_parameter
+  error - The named parameter 'activeColorPrimary' isn't defined - lib\features\home\main_screen.dart:29:13 - undefined_named_parameter
+  error - The named parameter 'inactiveColorPrimary' isn't defined - lib\features\home\main_screen.dart:30:13 - undefined_named_parameter
+  error - The named parameter 'activeColorPrimary' isn't defined - lib\features\home\main_screen.dart:38:13 - undefined_named_parameter
+  error - The named parameter 'inactiveColorPrimary' isn't defined - lib\features\home\main_screen.dart:39:13 - undefined_named_parameter
+  error - The named parameter 'activeColorPrimary' isn't defined - lib\features\home\main_screen.dart:48:13 - undefined_named_parameter
+  error - The named parameter 'inactiveColorPrimary' isn't defined - lib\features\home\main_screen.dart:49:13 - undefined_named_parameter
+  error - Undefined name 'quizNotifierProvider' - lib\features\quiz\quiz_play_screen.dart:11:33 - undefined_identifier
+  error - Undefined name 'quizNotifierProvider' - lib\features\quiz\quiz_play_screen.dart:29:43 - undefined_identifier
+  error - Undefined name 'quizNotifierProvider' - lib\features\quiz\quiz_play_screen.dart:74:45 - undefined_identifier
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\quiz\quiz_play_screen.dart:81:73 - deprecated_member_use
+  error - Undefined name 'quizNotifierProvider' - lib\features\quiz\quiz_play_screen.dart:100:36 - undefined_identifier
+  error - Target of URI hasn't been generated: 'package:gesui3_test_online/features/quiz/quiz_provider.g.dart' - lib\features\quiz\quiz_provider.dart:4:6 - uri_has_not_been_generated
+  error - Undefined name 'riverpod' used as an annotation - lib\features\quiz\quiz_provider.dart:6:1 - undefined_annotation
+  error - Undefined class 'QuizState' - lib\features\quiz\quiz_provider.dart:9:3 - undefined_class
+warning - The method doesn't override an inherited method - lib\features\quiz\quiz_provider.dart:9:13 - override_on_non_overriding_member
+  error - The name 'QuizState' isn't a class - lib\features\quiz\quiz_provider.dart:10:18 - creation_with_non_type
+  error - The name 'Question' isn't a type, so it can't be used as a type argument - lib\features\quiz\quiz_provider.dart:13:23 - non_type_as_type_argument
+  error - Undefined name 'state' - lib\features\quiz\quiz_provider.dart:14:5 - undefined_identifier
+  error - The method 'QuizState' isn't defined for the type 'QuizNotifier' - lib\features\quiz\quiz_provider.dart:14:13 - undefined_method
+  error - Undefined name 'state' - lib\features\quiz\quiz_provider.dart:18:9 - undefined_identifier
+  error - Undefined name 'state' - lib\features\quiz\quiz_provider.dart:20:43 - undefined_identifier
+  error - Undefined name 'state' - lib\features\quiz\quiz_provider.dart:21:16 - undefined_identifier
+  error - Undefined name 'state' - lib\features\quiz\quiz_provider.dart:23:5 - undefined_identifier
+  error - Undefined name 'state' - lib\features\quiz\quiz_provider.dart:23:13 - undefined_identifier
+  error - Undefined name 'state' - lib\features\quiz\quiz_provider.dart:27:9 - undefined_identifier
+  error - Undefined name 'state' - lib\features\quiz\quiz_provider.dart:27:30 - undefined_identifier
+  error - Undefined name 'state' - lib\features\quiz\quiz_provider.dart:28:7 - undefined_identifier
+  error - Undefined name 'state' - lib\features\quiz\quiz_provider.dart:28:15 - undefined_identifier
+  error - Undefined name 'state' - lib\features\quiz\quiz_provider.dart:28:44 - undefined_identifier
+  error - Undefined name 'state' - lib\features\quiz\quiz_provider.dart:30:7 - undefined_identifier
+  error - Undefined name 'state' - lib\features\quiz\quiz_provider.dart:30:15 - undefined_identifier
+  error - Undefined name 'ref' - lib\features\quiz\quiz_provider.dart:36:18 - undefined_identifier
+  error - Undefined name 'ref' - lib\features\quiz\quiz_provider.dart:39:24 - undefined_identifier
+  error - Undefined name 'state' - lib\features\quiz\quiz_provider.dart:44:25 - undefined_identifier
+  error - Undefined name 'state' - lib\features\quiz\quiz_provider.dart:45:24 - undefined_identifier
+  error - Undefined name 'state' - lib\features\quiz\quiz_provider.dart:46:24 - undefined_identifier
+  error - Undefined name 'state' - lib\features\quiz\quiz_provider.dart:58:22 - undefined_identifier
+  error - Undefined name 'state' - lib\features\quiz\quiz_provider.dart:59:11 - undefined_identifier
+  error - Undefined name 'state' - lib\features\quiz\quiz_provider.dart:71:9 - undefined_identifier
+  error - Undefined name 'state' - lib\features\quiz\quiz_provider.dart:72:7 - undefined_identifier
+  error - Undefined name 'state' - lib\features\quiz\quiz_provider.dart:72:15 - undefined_identifier
+  error - Undefined name 'state' - lib\features\quiz\quiz_provider.dart:72:44 - undefined_identifier
+  error - Undefined name 'state' - lib\features\quiz\quiz_provider.dart:77:5 - undefined_identifier
+  error - The method 'QuizState' isn't defined for the type 'QuizNotifier' - lib\features\quiz\quiz_provider.dart:77:13 - undefined_method
+  error - Undefined name 'state' - lib\features\quiz\quiz_provider.dart:77:34 - undefined_identifier
+  error - Undefined name 'riverpod' used as an annotation - lib\features\quiz\quiz_provider.dart:83:1 - undefined_annotation
+  error - The name 'Question' isn't a type, so it can't be used as a type argument - lib\features\quiz\quiz_provider.dart:84:13 - non_type_as_type_argument
+  error - Undefined class 'OnlineQuestionsRef' - lib\features\quiz\quiz_provider.dart:84:40 - undefined_class
+  error - Undefined name 'riverpod' used as an annotation - lib\features\quiz\quiz_provider.dart:90:1 - undefined_annotation
+  error - The name 'Question' isn't a type, so it can't be used as a type argument - lib\features\quiz\quiz_provider.dart:91:6 - non_type_as_type_argument
+  error - Undefined class 'SampleQuestionsRef' - lib\features\quiz\quiz_provider.dart:91:32 - undefined_class
+  error - The name 'Question' isn't a class - lib\features\quiz\quiz_provider.dart:94:11 - creation_with_non_type
+  error - The name 'Question' isn't a class - lib\features\quiz\quiz_provider.dart:102:11 - creation_with_non_type
+  error - The name 'Question' isn't a class - lib\features\quiz\quiz_provider.dart:110:11 - creation_with_non_type
+warning - Unused import: 'package:firebase_auth/firebase_auth.dart' - lib\main.dart:6:8 - unused_import
+   info - 'background' is deprecated and shouldn't be used. Use surface instead. This feature was deprecated after v3.18.0-0.1.pre - lib\shared\theme\app_theme.dart:13:9 - deprecated_member_use
+  error - The argument type 'CardTheme' can't be assigned to the parameter type 'CardThemeData?'.  - lib\shared\theme\app_theme.dart:40:18 - argument_type_not_assignable
+  error - The named parameter 'elevationOverlayColor' isn't defined - lib\shared\theme\app_theme.dart:48:7 - undefined_named_parameter
+
