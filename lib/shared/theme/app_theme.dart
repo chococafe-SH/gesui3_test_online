@@ -46,4 +46,50 @@ class AppTheme {
       ),
     );
   }
+
+  static ThemeData get darkTheme {
+    return ThemeData(
+      useMaterial3: true,
+      brightness: Brightness.dark,
+      colorScheme: ColorScheme.fromSeed(
+        seedColor: AppColors.primaryBlue,
+        brightness: Brightness.dark,
+        primary: AppColors.primaryBlue,
+        secondary: AppColors.secondaryGreen,
+        surface: AppColors.surfaceDark,
+        error: AppColors.errorRed,
+      ),
+      scaffoldBackgroundColor: AppColors.backgroundDark,
+      textTheme: GoogleFonts.notoSansJpTextTheme().copyWith(
+        displayLarge: GoogleFonts.notoSansJp(
+          color: AppColors.textPrimaryDark,
+          fontWeight: FontWeight.bold,
+        ),
+        titleLarge: GoogleFonts.notoSansJp(
+          color: AppColors.textPrimaryDark,
+          fontWeight: FontWeight.w600,
+        ),
+        bodyLarge: GoogleFonts.notoSansJp(
+          color: AppColors.textPrimaryDark,
+        ),
+        bodyMedium: GoogleFonts.notoSansJp(
+          color: AppColors.textSecondaryDark,
+        ),
+      ),
+      appBarTheme: const AppBarTheme(
+        backgroundColor: AppColors.surfaceDark,
+        foregroundColor: AppColors.textPrimaryDark,
+        elevation: 0,
+        centerTitle: true,
+      ),
+      cardTheme: CardThemeData(
+        color: AppColors.surfaceDark,
+        elevation: 2,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+          side: const BorderSide(color: AppColors.borderDark, width: 0.5),
+        ),
+      ),
+    );
+  }
 }

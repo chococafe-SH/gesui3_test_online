@@ -13,27 +13,19 @@ class QuestionSync extends _$QuestionSync {
   }
 
   Future<void> _backgroundSync() async {
-    final repository = ref.read(userRepositoryProvider);
-    
     try {
-      // カテゴリ一覧を動的に取得
-      final categories = await repository.fetchCategories();
-
-      for (final category in categories) {
-        try {
-          // サーバーから強制的にフェッチしてキャッシュを更新する
-          await FirebaseFirestore.instance
-              .collection('questions')
-              .where('category', isEqualTo: category)
-              .get(const GetOptions(source: Source.server))
-              .timeout(const Duration(seconds: 10));
-          print('Background sync completed for: $category');
-        } catch (e) {
-          print('Background sync failed for $category: $e');
-        }
-      }
+      // UserRepository.fetchQuestions が使用する全件取得クエリと同じものを実行し、
+      // サーバーソースを指定することで Firestore のローカルキャッシュを強制更新する。
+      await FirebaseFirestore.instance
+          .collection('questions')
+          .limit(500)
+          .get(const GetOptions(source: Source.server))
+          .timeout(const Duration(seconds: 20));
+      
+      print('Manual/Background sync: 500 questions prefetched from server.');
     } catch (e) {
-      print('Failed to fetch categories for sync: $e');
+      print('Sync failed: $e');
+      rethrow; // triggerManualSync で捕捉できるように再スロー
     }
   }
 

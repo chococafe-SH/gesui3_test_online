@@ -6,7 +6,7 @@ part of 'question_sync_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$questionSyncHash() => r'787e0a7735fe85d973a1eea4e522606e11bc77ac';
+String _$questionSyncHash() => r'ef357b485c256689bcd3dfdd01984dc5ec5b13d6';
 
 /// See also [QuestionSync].
 @ProviderFor(QuestionSync)

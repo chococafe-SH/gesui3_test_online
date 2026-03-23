@@ -165,21 +165,152 @@ final sampleQuestionsProvider = AutoDisposeProvider<List<Question>>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef SampleQuestionsRef = AutoDisposeProviderRef<List<Question>>;
-String _$quizNotifierHash() => r'60c1d0a77e6ce2b9edbccaf863705423d2a1d384';
+String _$weakQuestionsHash() => r'cba40b9e1c38ab5add03ef796c7ffb165d72693d';
+
+/// See also [weakQuestions].
+@ProviderFor(weakQuestions)
+const weakQuestionsProvider = WeakQuestionsFamily();
+
+/// See also [weakQuestions].
+class WeakQuestionsFamily extends Family<AsyncValue<List<Question>>> {
+  /// See also [weakQuestions].
+  const WeakQuestionsFamily();
+
+  /// See also [weakQuestions].
+  WeakQuestionsProvider call(List<String> weakIds, bool isPremium) {
+    return WeakQuestionsProvider(weakIds, isPremium);
+  }
+
+  @override
+  WeakQuestionsProvider getProviderOverride(
+    covariant WeakQuestionsProvider provider,
+  ) {
+    return call(provider.weakIds, provider.isPremium);
+  }
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'weakQuestionsProvider';
+}
+
+/// See also [weakQuestions].
+class WeakQuestionsProvider extends AutoDisposeFutureProvider<List<Question>> {
+  /// See also [weakQuestions].
+  WeakQuestionsProvider(List<String> weakIds, bool isPremium)
+    : this._internal(
+        (ref) => weakQuestions(ref as WeakQuestionsRef, weakIds, isPremium),
+        from: weakQuestionsProvider,
+        name: r'weakQuestionsProvider',
+        debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+            ? null
+            : _$weakQuestionsHash,
+        dependencies: WeakQuestionsFamily._dependencies,
+        allTransitiveDependencies:
+            WeakQuestionsFamily._allTransitiveDependencies,
+        weakIds: weakIds,
+        isPremium: isPremium,
+      );
+
+  WeakQuestionsProvider._internal(
+    super._createNotifier, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.weakIds,
+    required this.isPremium,
+  }) : super.internal();
+
+  final List<String> weakIds;
+  final bool isPremium;
+
+  @override
+  Override overrideWith(
+    FutureOr<List<Question>> Function(WeakQuestionsRef provider) create,
+  ) {
+    return ProviderOverride(
+      origin: this,
+      override: WeakQuestionsProvider._internal(
+        (ref) => create(ref as WeakQuestionsRef),
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        weakIds: weakIds,
+        isPremium: isPremium,
+      ),
+    );
+  }
+
+  @override
+  AutoDisposeFutureProviderElement<List<Question>> createElement() {
+    return _WeakQuestionsProviderElement(this);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is WeakQuestionsProvider &&
+        other.weakIds == weakIds &&
+        other.isPremium == isPremium;
+  }
+
+  @override
+  int get hashCode {
+    var hash = _SystemHash.combine(0, runtimeType.hashCode);
+    hash = _SystemHash.combine(hash, weakIds.hashCode);
+    hash = _SystemHash.combine(hash, isPremium.hashCode);
+
+    return _SystemHash.finish(hash);
+  }
+}
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+mixin WeakQuestionsRef on AutoDisposeFutureProviderRef<List<Question>> {
+  /// The parameter `weakIds` of this provider.
+  List<String> get weakIds;
+
+  /// The parameter `isPremium` of this provider.
+  bool get isPremium;
+}
+
+class _WeakQuestionsProviderElement
+    extends AutoDisposeFutureProviderElement<List<Question>>
+    with WeakQuestionsRef {
+  _WeakQuestionsProviderElement(super.provider);
+
+  @override
+  List<String> get weakIds => (origin as WeakQuestionsProvider).weakIds;
+  @override
+  bool get isPremium => (origin as WeakQuestionsProvider).isPremium;
+}
+
+String _$quizNotifierHash() => r'0ed79be5b8ca1a8440d45dd8fe6e3fbb3bbbc6c0';
 
 /// See also [QuizNotifier].
 @ProviderFor(QuizNotifier)
-final quizNotifierProvider =
-    AutoDisposeNotifierProvider<QuizNotifier, QuizState>.internal(
-      QuizNotifier.new,
-      name: r'quizNotifierProvider',
-      debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-          ? null
-          : _$quizNotifierHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
+final quizNotifierProvider = NotifierProvider<QuizNotifier, QuizState>.internal(
+  QuizNotifier.new,
+  name: r'quizNotifierProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$quizNotifierHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
 
-typedef _$QuizNotifier = AutoDisposeNotifier<QuizState>;
+typedef _$QuizNotifier = Notifier<QuizState>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

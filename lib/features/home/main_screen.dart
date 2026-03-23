@@ -3,6 +3,8 @@ import 'package:persistent_bottom_nav_bar_v2/persistent_bottom_nav_bar_v2.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../history/history_screen.dart';
 import 'home_screen.dart';
+import '../mypage/mypage_screen.dart';
+import '../settings/settings_screen.dart';
 
 class MainScreen extends ConsumerWidget {
   const MainScreen({super.key});
@@ -26,14 +28,14 @@ class MainScreen extends ConsumerWidget {
           ),
         ),
         PersistentTabConfig(
-          screen: const Center(child: Text('マイページ')),
+          screen: const MypageScreen(),
           item: ItemConfig(
             icon: const Icon(Icons.person),
             title: 'マイページ',
           ),
         ),
         PersistentTabConfig(
-          screen: const Center(child: Text('設定')),
+          screen: const SettingsScreen(),
           item: ItemConfig(
             icon: const Icon(Icons.settings),
             title: '設定',

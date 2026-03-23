@@ -1,0 +1,31 @@
+Running Gradle task 'assembleRelease'...                        
+lib/core/services/notification_service.dart:16:33: Error: A value of type 'TimezoneInfo' can't be assigned to a variable of type 'String'.
+ - 'TimezoneInfo' is from 'package:flutter_timezone/timezone_info.dart' ('../../../../AppData/Local/Pub/Cache/hosted/pub.dev/flutter_timezone-5.0.2/lib/timezone_info.dart').
+    final String timeZoneName = await FlutterTimezone.getLocalTimezone();
+                                ^
+lib/core/services/notification_service.dart:89:48: Error: The getter 'UILocalNotificationDateInterpretation' isn't defined for the type 'NotificationService'.
+ - 'NotificationService' is from 'package:gesui3_test_online/core/services/notification_service.dart' ('lib/core/services/notification_service.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named 'UILocalNotificationDateInterpretation'.
+        uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,
+                                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+lib/core/services/notification_service.dart:89:9: Error: No named parameter with the name 'uiLocalNotificationDateInterpretation'.
+        uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Target kernel_snapshot_program failed: Exception
+
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':app:compileFlutterBuildRelease'.
+> Process 'command 'C:\Users\PC_User\.gemini\antigravity\scratch\flutter\flutter\bin\flutter.bat'' finished with non-zero exit value 1
+
+* Try:
+> Run with --stacktrace option to get the stack trace.
+> Run with --info or --debug option to get more log output.
+> Run with --scan to get full insights.
+> Get more help at https://help.gradle.org.
+
+BUILD FAILED in 9s
+Running Gradle task 'assembleRelease'...                           10.1s
+Gradle task assembleRelease failed with exit code 1

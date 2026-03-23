@@ -23,18 +23,70 @@ class QuizPlayScreen extends ConsumerWidget {
     return _buildQuestionScreen(context, ref, quizState);
   }
 
+  Future<bool> _onWillPop(BuildContext context, WidgetRef ref) async {
+    final result = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('クイズを終了しますか？'),
+        content: const Text('ここまでの回答結果を保存して終了します。'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: const Text('キャンセル'),
+          ),
+          ElevatedButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            style: ElevatedButton.styleFrom(backgroundColor: AppColors.primaryBlue, foregroundColor: Colors.white),
+            child: const Text('保存して終了'),
+          ),
+        ],
+      ),
+    );
+
+    if (result == true) {
+      if (!context.mounted) return true;
+
+      // ローディングダイアログを表示
+      showGeneralDialog(
+        context: context,
+        barrierDismissible: false,
+        barrierLabel: '',
+        pageBuilder: (ctx, _, __) => const Center(child: CircularProgressIndicator()),
+      );
+
+      try {
+        await ref.read(quizNotifierProvider.notifier).abortQuiz();
+      } finally {
+        // コンテキストが有効な場合のみ、ローディングダイアログを閉じる
+        if (context.mounted) {
+          Navigator.of(context, rootNavigator: true).pop();
+        }
+      }
+      return true;
+    }
+    return false;
+  }
+
   Widget _buildQuestionScreen(BuildContext context, WidgetRef ref, quizState) {
     final question = quizState.currentQuestion;
     final isShowingFeedback = quizState.showingFeedback;
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('問題 ${quizState.currentIndex + 1} / ${quizState.questions.length}'),
-        leading: IconButton(
-          icon: const Icon(Icons.close),
-          onPressed: () => Navigator.of(context).pop(),
+    return WillPopScope(
+      onWillPop: () => _onWillPop(context, ref),
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text('問題 ${quizState.currentIndex + 1} / ${quizState.questions.length}'),
+          leading: IconButton(
+            icon: const Icon(Icons.close),
+            onPressed: () async {
+              final shouldPop = await _onWillPop(context, ref);
+              if (shouldPop && context.mounted) {
+                // _onWillPop が true かつ Navigator がまだ存在する場合に遷移
+                Navigator.of(context).pop();
+              }
+            },
+          ),
         ),
-      ),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
         child: Column(
@@ -205,7 +257,7 @@ class QuizPlayScreen extends ConsumerWidget {
           ],
         ),
       ),
-    );
+    ));
   }
 
   Widget _buildResultScreen(BuildContext context, WidgetRef ref, quizState) {

@@ -21,4 +21,11 @@ class AppColors {
   // Neutral Colors
   static const Color border = Color(0xFFDADCE0);
   static const Color disabled = Color(0xFFE8EAED);
+
+  // Dark Mode Colors
+  static const Color backgroundDark = Color(0xFF121212);
+  static const Color surfaceDark = Color(0xFF1E1E1E);
+  static const Color textPrimaryDark = Color(0xFFE8EAED);
+  static const Color textSecondaryDark = Color(0xFF9AA0A6);
+  static const Color borderDark = Color(0xFF3C4043);
 }

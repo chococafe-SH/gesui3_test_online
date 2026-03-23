@@ -5,11 +5,16 @@ import 'features/home/main_screen.dart';
 import 'features/auth/auth_provider.dart';
 import 'features/auth/init_user_provider.dart';
 import 'features/quiz/question_sync_provider.dart';
+import 'features/settings/settings_provider.dart';
+import 'core/services/notification_service.dart';
 import 'package:firebase_core/firebase_core.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+  
+  // 通知サービスの初期化
+  await NotificationService().init();
   
   runApp(
     const ProviderScope(
@@ -24,10 +29,13 @@ class MyApp extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final authState = ref.watch(authNotifierProvider);
+    final settings = ref.watch(settingsNotifierProvider);
 
     return MaterialApp(
       title: '下水道3種 集中攻略',
       theme: AppTheme.lightTheme,
+      darkTheme: AppTheme.darkTheme,
+      themeMode: settings.isDarkMode ? ThemeMode.dark : ThemeMode.light,
       debugShowCheckedModeBanner: false,
       home: authState.when(
         data: (user) {

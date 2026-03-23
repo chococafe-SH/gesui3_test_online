@@ -1,3 +1,5 @@
+import 'dart:convert';
+import 'package:flutter/services.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../shared/models/quiz_models.dart';
 
@@ -14,11 +16,14 @@ class UserRepository {
         await userDoc.set({
           'id': uid,
           'isAnonymous': isAnonymous,
-          'createdAt': FieldValue.serverTimestamp(),
           'stats': {
             'totalAnswered': 0,
             'correctCount': 0,
+            'xp': 0,
+            'level': 1,
+            'currentStreak': 0,
             'lastActive': FieldValue.serverTimestamp(),
+            'weakQuestions': [],
           },
         }).timeout(const Duration(seconds: 10));
       } else {
@@ -37,101 +42,343 @@ class UserRepository {
     String uid,
     String category,
     List<Map<String, dynamic>> questionRecords,
+    int totalQuestions,
     int correctCount,
   ) async {
-    // 楽観的に完了させるため、同期を待たずに処理を開始
-    final batch = _firestore.batch();
-    
-    // 1. 履歴の追加
-    final historyRef = _firestore
-        .collection('users')
-        .doc(uid)
-        .collection('history')
-        .doc();
-    
-    batch.set(historyRef, {
-      'playedAt': FieldValue.serverTimestamp(),
-      'category': category,
-      'correctCount': correctCount,
-      'totalQuestions': questionRecords.length,
-      'questions': questionRecords,
-    });
-
-    // 2. ユーザー統計の更新
     final userRef = _firestore.collection('users').doc(uid);
-    batch.update(userRef, {
-      'stats.totalAnswered': FieldValue.increment(questionRecords.length),
-      'stats.correctCount': FieldValue.increment(correctCount),
-      'stats.lastActive': FieldValue.serverTimestamp(),
-    });
+    final logRef = userRef.collection('debug_logs').doc();
 
-    // オフライン対応のため、commit() 自体は即座に（あるいはバックグラウンドで）動作させる
-    // await しないことで呼び出し元（UI）に即座に制御を戻す選択肢もあるが、
-    // ここでは Firestore の内部キューに任せるため await する（Offline Persistence が有効なら即座に完了する）
-    await batch.commit();
-  }
-
-  // オンライン・オフライン両対応の問題取得
-  Future<List<Question>> fetchQuestions(String category) async {
-    print('Fetching questions for category: "$category" (Cache first)');
     try {
-      // 1. キャッシュ/サーバー混在で取得
-      var snapshot = await _firestore
-          .collection('questions')
-          .where('category', isEqualTo: category)
-          .get()
-          .timeout(const Duration(seconds: 15), onTimeout: () {
-            print('Fetch timeout for "$category", attempting cache source.');
-            return _firestore
-                .collection('questions')
-                .where('category', isEqualTo: category)
-                .get(const GetOptions(source: Source.cache));
-          });
-
-      // 2. もし結果が 0件 だった場合、サーバーから強制的に最新データを取得し直す（同期漏れ対策）
-      if (snapshot.docs.isEmpty) {
-        print('0 items found in cache/primary for "$category". Forcing server fetch.');
-        snapshot = await _firestore
-            .collection('questions')
-            .where('category', isEqualTo: category)
-            .get(const GetOptions(source: Source.server))
-            .timeout(const Duration(seconds: 15));
+      // ユーザー情報の取得（最新状態をサーバーから強制取得）
+      final userSnapshot = await userRef.get(const GetOptions(source: Source.server))
+          .timeout(const Duration(seconds: 10));
+      
+      if (!userSnapshot.exists) {
+        print('saveQuizResult: User document not found. UID: $uid. Initializing...');
+        await initializeUser(uid, true).timeout(const Duration(seconds: 10));
+        // 再度ドキュメントを取得せずに、初期値を使って続行するか、エラーを投げる
+        // ここでは安全のため、初期化後に続行する最小限のデータを準備する
       }
 
-      print('Firestore fetch success: ${snapshot.docs.length} docs found. (isFromCache: ${snapshot.metadata.isFromCache})');
-      
-      final questions = snapshot.docs.map((doc) {
-        final data = doc.data();
-        data['id'] = doc.id;
-        return Question.fromMap(data);
-      }).toList();
+      final data = (userSnapshot.exists ? userSnapshot.data() : null) as Map<String, dynamic>? ?? {};
+      final statsMap = data['stats'] as Map<String, dynamic>? ?? {};
 
-      return questions;
+      int currentXp = statsMap['xp'] as int? ?? 0;
+      int currentLevel = statsMap['level'] as int? ?? 1;
+      int currentStreak = statsMap['currentStreak'] as int? ?? 0;
+      Timestamp? lastQuizTs = statsMap['lastQuizDate'] as Timestamp?;
+      
+      // おおまかなXP計算（正解1問 = 10XP）
+      currentXp += correctCount * 10;
+      
+      // レベルアップ判定
+      while (currentXp >= currentLevel * 100) { // 複数レベルアップに対応
+        currentXp -= currentLevel * 100;
+        currentLevel++;
+      }
+
+      // ストリーク計算
+      final now = DateTime.now();
+      if (lastQuizTs != null) {
+        final lastDate = lastQuizTs.toDate();
+        final today = DateTime(now.year, now.month, now.day);
+        final last = DateTime(lastDate.year, lastDate.month, lastDate.day);
+        final difference = today.difference(last).inDays;
+
+        if (difference == 1) {
+          currentStreak++;
+        } else if (difference > 1) {
+          currentStreak = 1;
+        }
+      } else {
+        currentStreak = 1;
+      }
+
+      // 苦手問題（weakQuestions）の更新ロジック
+      final List<String> currentWeakQuestions = List<String>.from(statsMap['weakQuestions'] ?? []);
+      final Set<String> weakQuestionsSet = currentWeakQuestions.toSet();
+
+      for (final record in questionRecords) {
+        final id = record['questionId'] as String?;
+        final isCorrect = record['isCorrect'] as bool? ?? false;
+        if (id != null) {
+          if (isCorrect) {
+            weakQuestionsSet.remove(id);
+          } else {
+            weakQuestionsSet.add(id);
+          }
+        }
+      }
+      final weakQuestions = weakQuestionsSet.toList();
+
+      final batch = _firestore.batch();
+
+      // 1. 履歴の追加
+      final historyRef = userRef.collection('history').doc();
+      batch.set(historyRef, {
+        'playedAt': FieldValue.serverTimestamp(),
+        'category': category,
+        'correctCount': correctCount,
+        'totalQuestions': totalQuestions, // ここを引数の値に変更
+        'questions': questionRecords,
+      });
+
+      // 2. 統計の更新
+      batch.update(userRef, {
+        'stats.totalAnswered': FieldValue.increment(totalQuestions), // 回答数ではなく総問題数を加算
+        'stats.correctCount': FieldValue.increment(correctCount),
+        'stats.xp': currentXp,
+        'stats.level': currentLevel,
+        'stats.currentStreak': currentStreak,
+        'stats.lastQuizDate': FieldValue.serverTimestamp(),
+        'stats.lastActive': FieldValue.serverTimestamp(),
+        'stats.weakQuestions': weakQuestions,
+      });
+
+      // 3. デバッグログの保存（Firestore上に残す）
+      batch.set(logRef, {
+        'timestamp': FieldValue.serverTimestamp(),
+        'event': 'quiz_finished',
+        'category': category,
+        'recordsCount': questionRecords.length,
+        'totalQuestionsSession': totalQuestions,
+        'correctCount': correctCount,
+        'weakQuestionsAfter': weakQuestions.length,
+        'uid': uid,
+      });
+
+      await batch.commit().timeout(const Duration(seconds: 15));
+      print('saveQuizResult: Success for UID: $uid');
     } catch (e) {
-      print('Error fetching questions for "$category": $e');
+      print('saveQuizResult: Error saving result: $e');
+      // ログだけでも残す試み
+      try {
+        await logRef.set({
+          'timestamp': FieldValue.serverTimestamp(),
+          'event': 'error',
+          'error': e.toString(),
+          'uid': uid,
+        });
+      } catch (_) {}
       rethrow;
     }
   }
+
+  // JSONアセットからの読み込み（フォールバック用）
+  Future<List<Question>> loadQuestionsFromAssets() async {
+    try {
+      final String jsonString = await rootBundle.loadString('assets/questions.json');
+      print('loadQuestionsFromAssets: Loaded string length: ${jsonString.length}');
+      final List<dynamic> jsonData = json.decode(jsonString);
+      print('loadQuestionsFromAssets: Decoded items: ${jsonData.length}');
+      return jsonData.map((data) => Question.fromMap(data as Map<String, dynamic>)).toList();
+    } catch (e) {
+      print('Asset loading error (path: assets/questions.json): $e');
+      return [];
+    }
+  }
+
+  // 正規化ヘルパー（全角・半角・スペース・大文字小文字を無視）
+  String _normalize(String? s) {
+    if (s == null) return '';
+    return s.trim()
+      .replaceAll(RegExp(r'\s+'), '')
+      .replaceAll('　', '') // 全角スペース明示的除去
+      .toLowerCase();
+  }
+
+  // オンライン・オフライン両対応の問題取得
+  Future<List<Question>> fetchQuestions(String category, {bool isPremium = false}) async {
+    final normalizedTarget = _normalize(category);
+    print('--- fetchQuestions start: "$category" (Normalized: "$normalizedTarget", Premium: $isPremium) ---');
+    
+    List<Question> result = [];
+    
+    // 1. 最初は Firestore を試す
+    try {
+      final snapshot = await _firestore
+          .collection('questions')
+          .limit(500)
+          .get()
+          .timeout(const Duration(seconds: 15));
+
+      final List<Question> fromFirestore = [];
+      for (var doc in snapshot.docs) {
+        try {
+          final data = doc.data() as Map<String, dynamic>;
+          data['id'] = doc.id;
+          fromFirestore.add(Question.fromMap(data));
+        } catch (e) {
+          print('Parse error for ${doc.id}: $e');
+        }
+      }
+
+      // フィルタリング（カテゴリ + 有料設定）
+      result = fromFirestore.where((q) {
+        final qCat = _normalize(q.category);
+        final categoryMatch = qCat == normalizedTarget || normalizedTarget == '全て' || normalizedTarget.isEmpty;
+        
+        // 有料フラグがある場合は、無料(free)に加えて有料(premium)も許可
+        // 未課金の場合は「status が free」または「status フィールドがない」もののみ許可
+        final status = q.status?.toLowerCase() ?? 'free';
+        final accessMatch = isPremium || status == 'free';
+        
+        return categoryMatch && accessMatch;
+      }).toList();
+
+      if (result.isNotEmpty) {
+        print('Firestore から ${result.length} 件取得しました。');
+      }
+    } catch (e) {
+      print('Firestore 取得エラー: $e');
+    }
+
+    // 2. Firestore が空、または指定条件が 0 件だった場合、アセットを試す
+    if (result.isEmpty) {
+      print('Firestore が空のため、アセットからの読み込みを試行します...');
+      final fromAssets = await loadQuestionsFromAssets();
+      result = fromAssets.where((q) {
+        final qCat = _normalize(q.category);
+        final categoryMatch = qCat == normalizedTarget || normalizedTarget == '全て' || normalizedTarget.isEmpty;
+        
+        final status = q.status?.toLowerCase() ?? 'free';
+        final accessMatch = isPremium || status == 'free';
+
+        return categoryMatch && accessMatch;
+      }).toList();
+      print('アセットから ${result.length} 件取得しました。');
+    }
+
+    // 3. それでも空の場合、ハードコードされたサンプルを返す
+    if (result.isEmpty) {
+      print('アセットも空のため、ハードコードされたサンプルを使用します。');
+      final sampleQuestions = _getHardcodedSamples();
+      result = sampleQuestions.where((q) {
+        final qCat = _normalize(q.category);
+        return qCat == normalizedTarget || normalizedTarget == '全て' || normalizedTarget.isEmpty;
+      }).toList();
+      
+      if (result.isEmpty && sampleQuestions.isNotEmpty) {
+        result = sampleQuestions;
+      }
+    }
+
+    return result;
+  }
+
+  // ハードコードされたサンプルデータ（seeder.dartのデータの一部を移植、またはリファクタリングして共有）
+  List<Question> _getHardcodedSamples() {
+    return [
+      const Question(
+        id: 's1',
+        text: '下水道法において、公共下水道の設置及び管理は原則として誰が行うものとされていますか？',
+        options: ['国', '地方公共団体（市町村等）', '民間事業者', '都道府県知事'],
+        correctOptionIndex: 1,
+        explanation: '下水道法第3条により、市町村が公衆衛生の向上等のために設置管理します。',
+        category: '下水道法',
+      ),
+      const Question(
+        id: 's2',
+        text: 'BOD（生物化学的酸素要求量）の測定において、一般的に採用されている培養期間は何日間ですか？',
+        options: ['1日間', '3日間', '5日間', '20日間'],
+        correctOptionIndex: 2,
+        explanation: 'BOD5として知られる通り、20℃で5日間培養した時の酸素消費量を測定します。',
+        category: '下水処理',
+      ),
+      const Question(
+        id: 's3',
+        text: '下水道第3種技術検定の対象となるのは、主にどのような業務か？',
+        options: ['下水道の設計', '下水道の工事監督', '下水道の維持管理', '下水道の計画立案'],
+        correctOptionIndex: 2,
+        explanation: '第3種技術検定は、主に下水道施設の維持管理（運転管理・点検整備など）に関する技術を問うものです。',
+        category: '検定概要',
+      ),
+    ];
+  }
+
+  // デバッグ用: 全データを JSON 文字列として取得
+  Future<String> fetchRawJsonData() async {
+    try {
+      final snapshot = await _firestore.collection('questions').get();
+      final list = snapshot.docs.map((doc) {
+        final data = doc.data() as Map<String, dynamic>;
+        data['id'] = doc.id;
+        return data;
+      }).toList();
+      return json.encode(list);
+    } catch (e) {
+      return 'Error fetching raw data: $e';
+    }
+  }
+
+  /// 診断用の情報を取得（サーバー優先）
+  Future<Map<String, dynamic>> fetchDiagnosticInfo() async {
+    try {
+      final snapshot = await _firestore.collection('questions')
+          .get(const GetOptions(source: Source.server)) // サーバーから強制取得
+          .timeout(const Duration(seconds: 10));
+      
+      final categories = snapshot.docs
+          .map((doc) => doc.data()['category'] as String? ?? '未分類')
+          .toSet()
+          .toList();
+
+      return {
+        'projectId': _firestore.app.options.projectId,
+        'totalQuestionsServer': snapshot.size, // サーバー上の総数
+        'existingCategories': categories.take(5).join(', '),
+      };
+    } catch (e) {
+      return {'error': e.toString()};
+    }
+  }
+
+  /// Firestoreのローカルキャッシュをクリアして再起動する
+  Future<void> clearCache() async {
+    try {
+      await _firestore.terminate().timeout(const Duration(seconds: 3));
+      await _firestore.clearPersistence().timeout(const Duration(seconds: 3));
+    } catch (e) {
+      print('Failed to clear cache: $e');
+    }
+  }
+
   // カテゴリ一覧の取得
   Future<List<String>> fetchCategories() async {
     try {
+      // 1. まず専用の categories コレクションを試す
       final snapshot = await _firestore
           .collection('categories')
           .orderBy('order')
           .get()
-          .timeout(const Duration(seconds: 10), onTimeout: () {
-            return _firestore.collection('categories').get(const GetOptions(source: Source.cache));
-          });
+          .timeout(const Duration(seconds: 10));
       
-      if (snapshot.docs.isEmpty) {
-        // デフォルトのカテゴリを返す（初期データがない場合）
-        return ['下水道法', '下水処理', '検定概要'];
+      if (snapshot.docs.isNotEmpty) {
+        return snapshot.docs.map((doc) => doc.data()['name'] as String).toList();
+      }
+
+      // 2. categories がない場合、questions コレクションから直接抽出する（より確実）
+      final qSnapshot = await _firestore.collection('questions')
+          .limit(1000)
+          .get(const GetOptions(source: Source.server));
+      
+      final dynamicCategories = qSnapshot.docs
+          .map((doc) => (doc.data() as Map<String, dynamic>)['category']?.toString() ?? '')
+          .where((cat) => cat.isNotEmpty)
+          .toSet()
+          .toList();
+
+      if (dynamicCategories.isNotEmpty) {
+        dynamicCategories.sort();
+        return dynamicCategories;
       }
       
-      return snapshot.docs.map((doc) => doc.data()['name'] as String).toList();
+      // 3. 全て失敗した場合のフォールバック
+      return ['下水道法', '下水処理', '検定概要'];
     } catch (e) {
       print('Error fetching categories: $e');
       return ['下水道法', '下水処理', '検定概要'];
     }
   }
+
 }

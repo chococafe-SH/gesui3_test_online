@@ -5,7 +5,7 @@ import '../auth/auth_provider.dart';
 
 part 'quiz_provider.g.dart';
 
-@riverpod
+@Riverpod(keepAlive: true)
 class QuizNotifier extends _$QuizNotifier {
   @override
   QuizState build() {
@@ -54,6 +54,9 @@ class QuizNotifier extends _$QuizNotifier {
     for (int i = 0; i < state.questions.length; i++) {
       final question = state.questions[i];
       final selected = state.answers[i];
+      
+      if (selected == null) continue; // 未回答の場合はスキップ
+      
       final isCorrect = selected == question.correctOptionIndex;
       
       if (isCorrect) correctCount++;
@@ -65,6 +68,9 @@ class QuizNotifier extends _$QuizNotifier {
       });
     }
 
+    if (records.isEmpty) return; // 何も回答していなければスキップ
+
+
     final category = state.questions.isNotEmpty 
         ? state.questions.first.category ?? '未分類' 
         : '不明';
@@ -74,6 +80,7 @@ class QuizNotifier extends _$QuizNotifier {
         user.uid,
         category,
         records,
+        state.questions.length, // 回答数ではなくクイズ全体の総数を記録
         correctCount,
       );
     } catch (e) {
@@ -89,6 +96,23 @@ class QuizNotifier extends _$QuizNotifier {
         currentIndex: state.currentIndex - 1,
         showingFeedback: false,
       );
+    }
+  }
+
+  /// 途中退出時に、ここまでの回答結果を保存する
+  Future<void> abortQuiz() async {
+    if (state.answers.isNotEmpty && !state.isCompleted) {
+      // まず完了状態にする（これ以降の回答を防止）
+      state = state.copyWith(isCompleted: true, showingFeedback: false);
+      try {
+        await _saveResult().timeout(const Duration(seconds: 15));
+      } catch (e) {
+        print('abortQuiz: Error saving results: $e');
+        // 保存失敗しても状態は完了のまま
+      }
+    } else {
+      // 回答がない場合でも完了状態にする
+      state = state.copyWith(isCompleted: true);
     }
   }
 
@@ -135,4 +159,14 @@ List<Question> sampleQuestions(SampleQuestionsRef ref) {
       category: '検定概要',
     ),
   ];
+}
+
+// 復習（苦手な問題）専用プロバイダ
+@riverpod
+Future<List<Question>> weakQuestions(WeakQuestionsRef ref, List<String> weakIds, bool isPremium) async {
+  if (weakIds.isEmpty) return [];
+  final repository = ref.watch(userRepositoryProvider);
+  // 全問題を取得してIDでフィルタリング
+  final allQuestions = await repository.fetchQuestions('全て', isPremium: isPremium);
+  return allQuestions.where((q) => weakIds.contains(q.id)).toList();
 }

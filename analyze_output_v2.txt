@@ -1,0 +1,63 @@
+Resolving dependencies...
+Downloading packages...
+  _fe_analyzer_shared 85.0.0 (98.0.0 available)
+  analyzer 7.6.0 (12.0.0 available)
+  analyzer_plugin 0.13.4 (0.14.7 available)
+  build 2.5.4 (4.0.5 available)
+  build_config 1.1.2 (1.3.0 available)
+  build_resolvers 2.5.4 (3.0.4 available)
+  build_runner 2.5.4 (2.13.1 available)
+  build_runner_core 9.1.2 (9.3.2 available)
+  custom_lint_core 0.7.5 (0.8.2 available)
+  custom_lint_visitor 1.0.0+7.7.0 (1.0.0+9.0.0 available)
+  dart_style 3.1.1 (3.1.8 available)
+  flutter_riverpod 2.6.1 (3.3.1 available)
+  intl 0.19.0 (0.20.2 available)
+  matcher 0.12.18 (0.12.19 available)
+  meta 1.17.0 (1.18.2 available)
+  native_toolchain_c 0.17.5 (0.17.6 available)
+  riverpod 2.6.1 (3.2.1 available)
+  riverpod_annotation 2.6.1 (4.0.2 available)
+  riverpod_generator 2.6.5 (4.0.3 available)
+  source_gen 2.0.0 (4.2.2 available)
+  test_api 0.7.9 (0.7.11 available)
+  vector_math 2.2.0 (2.3.0 available)
+Got dependencies!
+22 packages have newer versions incompatible with dependency constraints.
+Try `flutter pub outdated` for more information.
+Analyzing gesui3_test_online...                                 
+
+   info - Don't invoke 'print' in production code - lib\core\repositories\user_repository.dart:35:7 - avoid_print
+   info - Don't invoke 'print' in production code - lib\core\repositories\user_repository.dart:128:7 - avoid_print
+   info - Don't invoke 'print' in production code - lib\core\repositories\user_repository.dart:140:7 - avoid_print
+   info - Don't invoke 'print' in production code - lib\core\repositories\user_repository.dart:157:5 - avoid_print
+warning - Unnecessary cast - lib\core\repositories\user_repository.dart:172:24 - unnecessary_cast
+   info - Don't invoke 'print' in production code - lib\core\repositories\user_repository.dart:176:11 - avoid_print
+   info - Don't invoke 'print' in production code - lib\core\repositories\user_repository.dart:186:7 - avoid_print
+   info - Don't invoke 'print' in production code - lib\core\repositories\user_repository.dart:188:7 - avoid_print
+   info - Don't invoke 'print' in production code - lib\core\repositories\user_repository.dart:193:7 - avoid_print
+   info - Don't invoke 'print' in production code - lib\core\repositories\user_repository.dart:199:7 - avoid_print
+   info - Don't invoke 'print' in production code - lib\core\repositories\user_repository.dart:204:7 - avoid_print
+   info - Don't invoke 'print' in production code - lib\core\repositories\user_repository.dart:215:7 - avoid_print
+warning - Unnecessary cast - lib\core\repositories\user_repository.dart:256:22 - unnecessary_cast
+warning - Unnecessary cast - lib\core\repositories\user_repository.dart:285:26 - unnecessary_cast
+   info - Don't invoke 'print' in production code - lib\core\repositories\user_repository.dart:298:7 - avoid_print
+warning - Unnecessary cast - lib\core\repositories\user_repository.dart:317:24 - unnecessary_cast
+   info - Don't invoke 'print' in production code - lib\core\repositories\user_repository.dart:324:7 - avoid_print
+  error - The named parameter 'uiLocalNotificationDateInterpretation' isn't defined - lib\core\services\notification_service.dart:73:9 - undefined_named_parameter
+  error - Undefined name 'UILocalNotificationDateInterpretation' - lib\core\services\notification_service.dart:74:13 - undefined_identifier
+   info - Unnecessary braces in a string interpolation - lib\core\utils\seeder.dart:117:51 - unnecessary_brace_in_string_interps
+   info - Unnecessary braces in a string interpolation - lib\core\utils\seeder.dart:120:21 - unnecessary_brace_in_string_interps
+   info - Unnecessary braces in a string interpolation - lib\core\utils\seeder.dart:120:52 - unnecessary_brace_in_string_interps
+   info - Don't invoke 'print' in production code - lib\features\auth\init_user_provider.dart:20:5 - avoid_print
+   info - Unnecessary use of 'toList' in a spread - lib\features\history\history_screen.dart:40:103 - unnecessary_to_list_in_spreads
+   info - 'value' is deprecated and shouldn't be used. Use initialValue instead. This will set the initial value for the form field. This feature was deprecated after v3.33.0-1.0.pre - lib\features\history\history_screen.dart:78:25 - deprecated_member_use
+   info - 'value' is deprecated and shouldn't be used. Use initialValue instead. This will set the initial value for the form field. This feature was deprecated after v3.33.0-1.0.pre - lib\features\history\history_screen.dart:94:25 - deprecated_member_use
+   info - Unnecessary use of multiple underscores - lib\features\home\home_screen.dart:557:43 - unnecessary_underscores
+   info - Don't invoke 'print' in production code - lib\features\quiz\question_sync_provider.dart:30:11 - avoid_print
+   info - Don't invoke 'print' in production code - lib\features\quiz\question_sync_provider.dart:32:11 - avoid_print
+   info - Don't invoke 'print' in production code - lib\features\quiz\question_sync_provider.dart:36:7 - avoid_print
+   info - Don't invoke 'print' in production code - lib\features\quiz\quiz_provider.dart:82:7 - avoid_print
+   info - 'activeColor' is deprecated and shouldn't be used. Use activeThumbColor instead. This feature was deprecated after v3.31.0-2.0.pre - lib\features\settings\settings_screen.dart:31:13 - deprecated_member_use
+   info - 'activeColor' is deprecated and shouldn't be used. Use activeThumbColor instead. This feature was deprecated after v3.31.0-2.0.pre - lib\features\settings\settings_screen.dart:41:13 - deprecated_member_use
+

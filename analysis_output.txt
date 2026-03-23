@@ -1,0 +1,36 @@
+Analyzing gesui3_test_online...                                 
+
+   info - Don't invoke 'print' in production code - lib\core\repositories\user_repository.dart:35:7 - avoid_print
+   info - Don't invoke 'print' in production code - lib\core\repositories\user_repository.dart:128:7 - avoid_print
+   info - Don't invoke 'print' in production code - lib\core\repositories\user_repository.dart:137:7 - avoid_print
+   info - Don't invoke 'print' in production code - lib\core\repositories\user_repository.dart:139:7 - avoid_print
+   info - Don't invoke 'print' in production code - lib\core\repositories\user_repository.dart:142:7 - avoid_print
+   info - Don't invoke 'print' in production code - lib\core\repositories\user_repository.dart:159:5 - avoid_print
+warning - Unnecessary cast - lib\core\repositories\user_repository.dart:174:24 - unnecessary_cast
+   info - Don't invoke 'print' in production code - lib\core\repositories\user_repository.dart:178:11 - avoid_print
+   info - Don't invoke 'print' in production code - lib\core\repositories\user_repository.dart:196:9 - avoid_print
+   info - Don't invoke 'print' in production code - lib\core\repositories\user_repository.dart:199:7 - avoid_print
+   info - Don't invoke 'print' in production code - lib\core\repositories\user_repository.dart:204:7 - avoid_print
+   info - Don't invoke 'print' in production code - lib\core\repositories\user_repository.dart:215:7 - avoid_print
+   info - Don't invoke 'print' in production code - lib\core\repositories\user_repository.dart:220:7 - avoid_print
+warning - Unnecessary cast - lib\core\repositories\user_repository.dart:270:22 - unnecessary_cast
+warning - Unnecessary cast - lib\core\repositories\user_repository.dart:299:26 - unnecessary_cast
+   info - Don't invoke 'print' in production code - lib\core\repositories\user_repository.dart:312:7 - avoid_print
+warning - Unnecessary cast - lib\core\repositories\user_repository.dart:331:24 - unnecessary_cast
+   info - Don't invoke 'print' in production code - lib\core\repositories\user_repository.dart:338:7 - avoid_print
+   info - Unnecessary braces in a string interpolation - lib\core\utils\seeder.dart:97:51 - unnecessary_brace_in_string_interps
+   info - Unnecessary braces in a string interpolation - lib\core\utils\seeder.dart:100:21 - unnecessary_brace_in_string_interps
+   info - Unnecessary braces in a string interpolation - lib\core\utils\seeder.dart:100:52 - unnecessary_brace_in_string_interps
+   info - Don't invoke 'print' in production code - lib\features\auth\init_user_provider.dart:20:5 - avoid_print
+   info - Unnecessary use of 'toList' in a spread - lib\features\history\history_screen.dart:40:103 - unnecessary_to_list_in_spreads
+   info - 'value' is deprecated and shouldn't be used. Use initialValue instead. This will set the initial value for the form field. This feature was deprecated after v3.33.0-1.0.pre - lib\features\history\history_screen.dart:78:25 - deprecated_member_use
+   info - 'value' is deprecated and shouldn't be used. Use initialValue instead. This will set the initial value for the form field. This feature was deprecated after v3.33.0-1.0.pre - lib\features\history\history_screen.dart:94:25 - deprecated_member_use
+  error - Undefined name 'premiumNotifierProvider' - lib\features\home\home_screen.dart:546:34 - undefined_identifier
+   info - Unnecessary use of multiple underscores - lib\features\home\home_screen.dart:608:43 - unnecessary_underscores
+warning - Unused import: '../../core/repositories/user_repository_provider.dart' - lib\features\quiz\question_sync_provider.dart:3:8 - unused_import
+   info - Don't invoke 'print' in production code - lib\features\quiz\question_sync_provider.dart:25:7 - avoid_print
+   info - Don't invoke 'print' in production code - lib\features\quiz\question_sync_provider.dart:27:7 - avoid_print
+   info - Don't invoke 'print' in production code - lib\features\quiz\quiz_provider.dart:82:7 - avoid_print
+   info - 'activeColor' is deprecated and shouldn't be used. Use activeThumbColor instead. This feature was deprecated after v3.31.0-2.0.pre - lib\features\settings\settings_screen.dart:32:13 - deprecated_member_use
+   info - 'activeColor' is deprecated and shouldn't be used. Use activeThumbColor instead. This feature was deprecated after v3.31.0-2.0.pre - lib\features\settings\settings_screen.dart:42:13 - deprecated_member_use
+

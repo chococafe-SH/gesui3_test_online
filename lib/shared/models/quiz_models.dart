@@ -9,6 +9,7 @@ class Question {
   final String explanation;
   final String? category;
   final String? year;
+  final String? status; // "free" or "premium"
 
   const Question({
     required this.id,
@@ -18,6 +19,7 @@ class Question {
     required this.explanation,
     this.category,
     this.year,
+    this.status,
   });
 
   Map<String, dynamic> toMap() {
@@ -29,18 +31,29 @@ class Question {
       'explanation': explanation,
       'category': category,
       'year': year,
+      'status': status,
     };
   }
 
   factory Question.fromMap(Map<String, dynamic> map) {
+    // 安全に数値型(int)に変換するヘルパー
+    int toInt(dynamic value) {
+      if (value == null) return 0;
+      if (value is int) return value;
+      if (value is double) return value.toInt();
+      if (value is String) return int.tryParse(value) ?? 0;
+      return 0;
+    }
+
     return Question(
-      id: map['id'] ?? '',
-      text: map['text'] ?? '',
-      options: List<String>.from(map['options'] ?? []),
-      correctOptionIndex: map['correctOptionIndex'] ?? 0,
-      explanation: map['explanation'] ?? '',
-      category: map['category'],
-      year: map['year'],
+      id: map['id']?.toString() ?? '',
+      text: map['text']?.toString() ?? '',
+      options: (map['options'] as List<dynamic>?)?.map((e) => e.toString()).toList() ?? [],
+      correctOptionIndex: toInt(map['correctOptionIndex']),
+      explanation: map['explanation']?.toString() ?? '',
+      category: map['category']?.toString(),
+      year: map['year']?.toString(),
+      status: map['status']?.toString(),
     );
   }
 }
