@@ -65,6 +65,7 @@ class QuizNotifier extends _$QuizNotifier {
         'questionId': question.id,
         'selectedOption': selected,
         'isCorrect': isCorrect,
+        'category': question.category ?? '未分類',
       });
     }
 

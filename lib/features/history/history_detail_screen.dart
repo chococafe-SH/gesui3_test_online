@@ -12,10 +12,9 @@ class HistoryDetailScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final questionsData = record['questions'] as List<dynamic>? ?? [];
-    final category = record['category'] as String? ?? '全て';
     
-    // 全問題データを取得（カテゴリが分かっていればそのカテゴリ、分からなければ全て）
-    final allQuestionsAsync = ref.watch(onlineQuestionsProvider(category));
+    // IDで問題を引き当てるため、カテゴリに関わらず全問題データを取得
+    final allQuestionsAsync = ref.watch(onlineQuestionsProvider('全て'));
 
     return Scaffold(
       appBar: AppBar(
@@ -42,91 +41,158 @@ class HistoryDetailScreen extends ConsumerWidget {
 
               return Card(
                 margin: const EdgeInsets.only(bottom: 16),
+                elevation: 2,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
                 clipBehavior: Clip.antiAlias,
                 child: ExpansionTile(
-                  leading: Icon(
-                    isCorrect ? Icons.check_circle : Icons.cancel,
-                    color: isCorrect ? AppColors.secondaryGreen : AppColors.errorRed,
+                  leading: CircleAvatar(
+                    backgroundColor: isCorrect ? AppColors.secondaryGreen.withAlpha(40) : AppColors.errorRed.withAlpha(40),
+                    child: Icon(
+                      isCorrect ? Icons.check : Icons.close,
+                      color: isCorrect ? AppColors.secondaryGreen : AppColors.errorRed,
+                    ),
                   ),
                   title: Text(
-                    '第 ${index + 1} 問',
-                    style: const TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                  subtitle: Text(
-                    question?.text ?? '問題データが見つかりません',
+                    question?.text ?? '問題ID: $questionId',
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 15,
+                    ),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
+                  ),
+                  subtitle: Row(
+                    children: [
+                      Text(
+                        isCorrect ? '正解' : '不正解',
+                        style: TextStyle(
+                          color: isCorrect ? AppColors.secondaryGreen : AppColors.errorRed,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 13,
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Text(
+                        'あなたの回答: ${selectedOption + 1}',
+                        style: const TextStyle(fontSize: 12, color: AppColors.textSecondary),
+                      ),
+                    ],
                   ),
                   childrenPadding: const EdgeInsets.all(16),
                   expandedCrossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     if (question != null) ...[
                       const Text(
-                        '問題:',
-                        style: TextStyle(fontWeight: FontWeight.bold, color: AppColors.primaryBlue),
+                        '問題全文:',
+                        style: TextStyle(fontWeight: FontWeight.bold, color: AppColors.primaryBlue, fontSize: 13),
                       ),
-                      const SizedBox(height: 4),
-                      Text(question.text),
-                      const SizedBox(height: 16),
+                      const SizedBox(height: 6),
+                      Text(question.text, style: const TextStyle(fontSize: 15, height: 1.5)),
+                      const SizedBox(height: 20),
                       const Text(
                         '選択肢:',
-                        style: TextStyle(fontWeight: FontWeight.bold, color: AppColors.primaryBlue),
+                        style: TextStyle(fontWeight: FontWeight.bold, color: AppColors.primaryBlue, fontSize: 13),
                       ),
-                      const SizedBox(height: 8),
+                      const SizedBox(height: 10),
                       ...List.generate(question.options.length, (i) {
-                        final isSelected = i == selectedOption;
+                        final isMySelected = i == selectedOption;
                         final isCorrectOption = i == question.correctOptionIndex;
                         
                         Color bgColor = Colors.transparent;
                         Color textColor = AppColors.textPrimary;
-                        IconData? icon;
+                        Color borderColor = Colors.grey.shade300;
+                        Widget? suffix;
 
-                        if (isSelected && isCorrectOption) {
-                          bgColor = AppColors.secondaryGreen.withAlpha(30);
-                          icon = Icons.check_circle_outline;
-                        } else if (isSelected) {
-                          bgColor = AppColors.errorRed.withAlpha(30);
-                          icon = Icons.highlight_off;
+                        if (isMySelected && isCorrectOption) {
+                          bgColor = AppColors.secondaryGreen.withAlpha(20);
+                          textColor = AppColors.secondaryGreen;
+                          borderColor = AppColors.secondaryGreen;
+                          suffix = const Icon(Icons.check_circle, color: AppColors.secondaryGreen, size: 20);
+                        } else if (isMySelected) {
+                          bgColor = AppColors.errorRed.withAlpha(15);
+                          textColor = AppColors.errorRed;
+                          borderColor = AppColors.errorRed;
+                          suffix = const Icon(Icons.cancel, color: AppColors.errorRed, size: 20);
                         } else if (isCorrectOption) {
-                          bgColor = Colors.grey.withAlpha(20);
-                          icon = Icons.check_circle_outline;
+                          bgColor = AppColors.secondaryGreen.withAlpha(10);
+                          borderColor = AppColors.secondaryGreen.withAlpha(100);
+                          suffix = const Icon(Icons.check_circle_outline, color: AppColors.secondaryGreen, size: 20);
                         }
 
                         return Container(
-                          margin: const EdgeInsets.only(bottom: 8),
-                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                          margin: const EdgeInsets.only(bottom: 10),
+                          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
                           decoration: BoxDecoration(
                             color: bgColor,
-                            borderRadius: BorderRadius.circular(8),
-                            border: isSelected || isCorrectOption 
-                                ? Border.all(color: isCorrectOption ? AppColors.secondaryGreen : AppColors.errorRed)
-                                : Border.all(color: Colors.grey.shade300),
+                            borderRadius: BorderRadius.circular(12),
+                            border: Border.all(color: borderColor, width: (isMySelected || isCorrectOption) ? 1.5 : 1),
                           ),
                           child: Row(
                             children: [
-                              Text('${i + 1}. ', style: const TextStyle(fontWeight: FontWeight.bold)),
-                              Expanded(child: Text(question.options[i])),
-                              if (icon != null) Icon(icon, size: 20, color: isCorrectOption ? AppColors.secondaryGreen : AppColors.errorRed),
+                              Container(
+                                width: 24,
+                                height: 24,
+                                decoration: BoxDecoration(
+                                  color: isMySelected ? textColor : Colors.grey.shade200,
+                                  shape: BoxShape.circle,
+                                ),
+                                alignment: Alignment.center,
+                                child: Text(
+                                  '${i + 1}',
+                                  style: TextStyle(
+                                    color: isMySelected ? Colors.white : AppColors.textPrimary,
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(width: 12),
+                              Expanded(
+                                child: Text(
+                                  question.options[i],
+                                  style: TextStyle(
+                                    color: isMySelected || isCorrectOption ? textColor : AppColors.textPrimary,
+                                    fontWeight: isMySelected || isCorrectOption ? FontWeight.bold : FontWeight.normal,
+                                  ),
+                                ),
+                              ),
+                              if (suffix != null) suffix,
                             ],
                           ),
                         );
                       }),
-                      const SizedBox(height: 16),
+                      const SizedBox(height: 20),
                       const Text(
-                        '解説:',
-                        style: TextStyle(fontWeight: FontWeight.bold, color: AppColors.primaryBlue),
+                        '【 解説 】',
+                        style: TextStyle(fontWeight: FontWeight.bold, color: AppColors.primaryBlue, fontSize: 13),
                       ),
-                      const SizedBox(height: 4),
+                      const SizedBox(height: 10),
                       Container(
-                        padding: const EdgeInsets.all(12),
+                        width: double.infinity,
+                        padding: const EdgeInsets.all(16),
                         decoration: BoxDecoration(
-                          color: Colors.amber.shade50,
-                          borderRadius: BorderRadius.circular(8),
+                          color: AppColors.accentYellow.withAlpha(20),
+                          borderRadius: BorderRadius.circular(12),
+                          border: Border.all(color: AppColors.accentYellow.withAlpha(60)),
                         ),
-                        child: Text(question.explanation ?? '解説はありません。'),
+                        child: Text(
+                          question.explanation,
+                          style: const TextStyle(fontSize: 14, height: 1.6),
+                        ),
                       ),
                     ] else ...[
-                      const Text('問題の詳細データを取得できませんでした。'),
+                      const Center(
+                        child:  Padding(
+                          padding: EdgeInsets.symmetric(vertical: 20),
+                          child: Column(
+                            children: [
+                              Icon(Icons.search_off, color: Colors.grey, size: 40),
+                              SizedBox(height: 8),
+                              Text('問題の詳細データをロード中、または削除されています', style: TextStyle(color: Colors.grey)),
+                            ],
+                          ),
+                        ),
+                      ),
                     ],
                   ],
                 ),
@@ -143,10 +209,10 @@ class HistoryDetailScreen extends ConsumerWidget {
               children: [
                 const Icon(Icons.error_outline, size: 48, color: AppColors.errorRed),
                 const SizedBox(height: 16),
-                Text('データの読み込みに失敗しました: $err'),
+                Text('データの読み込みに失敗しました\nカテゴリ: 全て', textAlign: TextAlign.center),
                 const SizedBox(height: 16),
                 ElevatedButton(
-                  onPressed: () => ref.invalidate(onlineQuestionsProvider(category)),
+                  onPressed: () => ref.invalidate(onlineQuestionsProvider('全て')),
                   child: const Text('再試行'),
                 ),
               ],

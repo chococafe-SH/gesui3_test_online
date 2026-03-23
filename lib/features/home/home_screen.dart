@@ -428,7 +428,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     final repository = ref.read(userRepositoryProvider);
     final info = await repository.fetchDiagnosticInfo();
     if (!context.mounted) return;
-    Navigator.pop(context);
+    Navigator.of(context, rootNavigator: true).pop();
 
     showDialog(
       context: context,
@@ -570,7 +570,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       final questions = await ref.read(weakQuestionsProvider(weakIds, isPremium).future);
 
       if (context.mounted) {
-        Navigator.pop(context); // loadingを閉じる
+        Navigator.of(context, rootNavigator: true).pop(); // loadingを閉じる
         if (questions.isEmpty) {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text('復習対象の問題を取得できませんでした。')),
@@ -589,13 +589,14 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       }
     } catch (e) {
       if (context.mounted) {
-        Navigator.pop(context);
+        Navigator.of(context, rootNavigator: true).pop();
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('エラーが発生しました: $e')),
         );
       }
     }
   }
+
 }
 
 class _CategorySelectionDialog extends ConsumerWidget {

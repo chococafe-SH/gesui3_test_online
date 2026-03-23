@@ -1,6 +1,26 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 
+/// 分野ごとの正解数・解答数を保持するモデル
+@immutable
+class CategoryStat {
+  final int total;
+  final int correct;
+
+  const CategoryStat({this.total = 0, this.correct = 0});
+
+  double get rate => total > 0 ? correct / total : 0.0;
+
+  factory CategoryStat.fromMap(Map<String, dynamic> map) {
+    return CategoryStat(
+      total: map['total'] as int? ?? 0,
+      correct: map['correct'] as int? ?? 0,
+    );
+  }
+
+  Map<String, dynamic> toMap() => {'total': total, 'correct': correct};
+}
+
 @immutable
 class UserStats {
   final int totalAnswered;
@@ -11,6 +31,7 @@ class UserStats {
   final DateTime? lastQuizDate;
   final DateTime? lastActive;
   final List<String> weakQuestions;
+  final Map<String, CategoryStat> categoryStats;
 
   const UserStats({
     this.totalAnswered = 0,
@@ -21,9 +42,18 @@ class UserStats {
     this.lastQuizDate,
     this.lastActive,
     this.weakQuestions = const [],
+    this.categoryStats = const {},
   });
 
   factory UserStats.fromMap(Map<String, dynamic> map) {
+    final rawCategoryStats = map['categoryStats'] as Map<String, dynamic>?;
+    final categoryStats = <String, CategoryStat>{};
+    rawCategoryStats?.forEach((key, value) {
+      if (value is Map<String, dynamic>) {
+        categoryStats[key] = CategoryStat.fromMap(value);
+      }
+    });
+
     return UserStats(
       totalAnswered: map['totalAnswered'] as int? ?? 0,
       correctCount: map['correctCount'] as int? ?? 0,
@@ -33,6 +63,7 @@ class UserStats {
       lastQuizDate: (map['lastQuizDate'] as Timestamp?)?.toDate(),
       lastActive: (map['lastActive'] as Timestamp?)?.toDate(),
       weakQuestions: List<String>.from(map['weakQuestions'] ?? []),
+      categoryStats: categoryStats,
     );
   }
 
@@ -46,6 +77,9 @@ class UserStats {
       'lastQuizDate': lastQuizDate != null ? Timestamp.fromDate(lastQuizDate!) : null,
       'lastActive': lastActive != null ? Timestamp.fromDate(lastActive!) : FieldValue.serverTimestamp(),
       'weakQuestions': weakQuestions,
+      'categoryStats': {
+        for (final e in categoryStats.entries) e.key: e.value.toMap()
+      },
     };
   }
 

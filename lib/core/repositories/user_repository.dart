@@ -111,6 +111,16 @@ class UserRepository {
       }
       final weakQuestions = weakQuestionsSet.toList();
 
+      // 分野別統計の集計
+      final Map<String, int> catTotal = {};
+      final Map<String, int> catCorrect = {};
+      for (final record in questionRecords) {
+        final cat = record['category'] as String? ?? category;
+        final isCorrect = record['isCorrect'] as bool? ?? false;
+        catTotal[cat] = (catTotal[cat] ?? 0) + 1;
+        if (isCorrect) catCorrect[cat] = (catCorrect[cat] ?? 0) + 1;
+      }
+
       final batch = _firestore.batch();
 
       // 1. 履歴の追加
@@ -123,9 +133,9 @@ class UserRepository {
         'questions': questionRecords,
       });
 
-      // 2. 統計の更新
-      batch.update(userRef, {
-        'stats.totalAnswered': FieldValue.increment(totalQuestions), // 回答数ではなく総問題数を加算
+      // 2. 統計の更新（分野別を含む）
+      final updateData = <String, dynamic>{
+        'stats.totalAnswered': FieldValue.increment(totalQuestions),
         'stats.correctCount': FieldValue.increment(correctCount),
         'stats.xp': currentXp,
         'stats.level': currentLevel,
@@ -133,7 +143,16 @@ class UserRepository {
         'stats.lastQuizDate': FieldValue.serverTimestamp(),
         'stats.lastActive': FieldValue.serverTimestamp(),
         'stats.weakQuestions': weakQuestions,
+      };
+      // 分野別統計を ドット記法でマージ
+      catTotal.forEach((cat, total) {
+        updateData['stats.categoryStats.$cat.total'] = FieldValue.increment(total);
       });
+      catCorrect.forEach((cat, correct) {
+        updateData['stats.categoryStats.$cat.correct'] = FieldValue.increment(correct);
+      });
+      batch.update(userRef, updateData);
+
 
       // 3. デバッグログの保存（Firestore上に残す）
       batch.set(logRef, {
