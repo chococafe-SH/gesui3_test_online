@@ -89,7 +89,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               ),
             ),
             Text(
-              '集中攻略 1.0.0',
+              '集中攻略 1.0.1',
               style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                 color: Colors.white,
                 fontWeight: FontWeight.w900,

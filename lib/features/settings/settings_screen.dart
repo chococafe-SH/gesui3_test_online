@@ -155,6 +155,20 @@ class SettingsScreen extends ConsumerWidget {
                ));
             },
           ),
+          ListTile(
+            title: const Text('プライバシーポリシー'),
+            subtitle: const Text('アプリのプライバシーポリシーを確認します'),
+            trailing: const Icon(Icons.open_in_new),
+            onTap: () {
+               showDialog(context: context, builder: (context) => AlertDialog(
+                 title: const Text('プライバシーポリシー'),
+                 content: const Text('このアプリはFirebaseを使用して学習履歴等を保存しています。\n\n詳細なプライバシーポリシーページは準備中です。'),
+                 actions: [
+                   TextButton(onPressed: () => Navigator.pop(context), child: const Text('OK'))
+                 ],
+               ));
+            },
+          ),
           const SizedBox(height: 32),
           const Center(
             child: Text('Version 1.0.1', style: TextStyle(color: Colors.grey)),

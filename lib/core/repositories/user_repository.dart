@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../shared/models/quiz_models.dart';
@@ -32,7 +33,7 @@ class UserRepository {
         }).timeout(const Duration(seconds: 10));
       }
     } catch (e) {
-      print('Failed to initialize user: $e');
+      debugPrint('Failed to initialize user: $e');
       rethrow;
     }
   }
@@ -54,7 +55,7 @@ class UserRepository {
           .timeout(const Duration(seconds: 10));
       
       if (!userSnapshot.exists) {
-        print('saveQuizResult: User document not found. UID: $uid. Initializing...');
+        debugPrint('saveQuizResult: User document not found. UID: $uid. Initializing...');
         await initializeUser(uid, true).timeout(const Duration(seconds: 10));
         // 再度ドキュメントを取得せずに、初期値を使って続行するか、エラーを投げる
         // ここでは安全のため、初期化後に続行する最小限のデータを準備する
@@ -167,9 +168,9 @@ class UserRepository {
       });
 
       await batch.commit().timeout(const Duration(seconds: 15));
-      print('saveQuizResult: Success for UID: $uid');
+      debugPrint('saveQuizResult: Success for UID: $uid');
     } catch (e) {
-      print('saveQuizResult: Error saving result: $e');
+      debugPrint('saveQuizResult: Error saving result: $e');
       // ログだけでも残す試み
       try {
         await logRef.set({
