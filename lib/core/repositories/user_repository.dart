@@ -61,7 +61,7 @@ class UserRepository {
         // ここでは安全のため、初期化後に続行する最小限のデータを準備する
       }
 
-      final data = (userSnapshot.exists ? userSnapshot.data() : null) as Map<String, dynamic>? ?? {};
+      final data = userSnapshot.data() ?? {};
       final statsMap = data['stats'] as Map<String, dynamic>? ?? {};
 
       int currentXp = statsMap['xp'] as int? ?? 0;
@@ -188,12 +188,12 @@ class UserRepository {
   Future<List<Question>> loadQuestionsFromAssets() async {
     try {
       final String jsonString = await rootBundle.loadString('assets/questions.json');
-      print('loadQuestionsFromAssets: Loaded string length: ${jsonString.length}');
+      debugPrint('loadQuestionsFromAssets: Loaded string length: ${jsonString.length}');
       final List<dynamic> jsonData = json.decode(jsonString);
-      print('loadQuestionsFromAssets: Decoded items: ${jsonData.length}');
+      debugPrint('loadQuestionsFromAssets: Decoded items: ${jsonData.length}');
       return jsonData.map((data) => Question.fromMap(data as Map<String, dynamic>)).toList();
     } catch (e) {
-      print('Asset loading error (path: assets/questions.json): $e');
+      debugPrint('Asset loading error (path: assets/questions.json): $e');
       return [];
     }
   }
@@ -210,7 +210,7 @@ class UserRepository {
   // オンライン・オフライン両対応の問題取得
   Future<List<Question>> fetchQuestions(String category, {bool isPremium = false}) async {
     final normalizedTarget = _normalize(category);
-    print('--- fetchQuestions start: "$category" (Normalized: "$normalizedTarget", Premium: $isPremium) ---');
+    debugPrint('--- fetchQuestions start: "$category" (Normalized: "$normalizedTarget", Premium: $isPremium) ---');
     
     List<Question> result = [];
     
@@ -225,11 +225,11 @@ class UserRepository {
       final List<Question> fromFirestore = [];
       for (var doc in snapshot.docs) {
         try {
-          final data = doc.data() as Map<String, dynamic>;
+          final data = doc.data();
           data['id'] = doc.id;
           fromFirestore.add(Question.fromMap(data));
         } catch (e) {
-          print('Parse error for ${doc.id}: $e');
+          debugPrint('Parse error for ${doc.id}: $e');
         }
       }
 
@@ -247,15 +247,15 @@ class UserRepository {
       }).toList();
 
       if (result.isNotEmpty) {
-        print('Firestore から ${result.length} 件取得しました。');
+        debugPrint('Firestore から ${result.length} 件取得しました。');
       }
     } catch (e) {
-      print('Firestore 取得エラー: $e');
+      debugPrint('Firestore 取得エラー: $e');
     }
 
     // 2. Firestore が空、または指定条件が 0 件だった場合、アセットを試す
     if (result.isEmpty) {
-      print('Firestore が空のため、アセットからの読み込みを試行します...');
+      debugPrint('Firestore が空のため、アセットからの読み込みを試行します...');
       final fromAssets = await loadQuestionsFromAssets();
       result = fromAssets.where((q) {
         final qCat = _normalize(q.category);
@@ -266,12 +266,12 @@ class UserRepository {
 
         return categoryMatch && accessMatch;
       }).toList();
-      print('アセットから ${result.length} 件取得しました。');
+      debugPrint('アセットから ${result.length} 件取得しました。');
     }
 
     // 3. それでも空の場合、ハードコードされたサンプルを返す
     if (result.isEmpty) {
-      print('アセットも空のため、ハードコードされたサンプルを使用します。');
+      debugPrint('アセットも空のため、ハードコードされたサンプルを使用します。');
       final sampleQuestions = _getHardcodedSamples();
       result = sampleQuestions.where((q) {
         final qCat = _normalize(q.category);
@@ -321,7 +321,7 @@ class UserRepository {
     try {
       final snapshot = await _firestore.collection('questions').get();
       final list = snapshot.docs.map((doc) {
-        final data = doc.data() as Map<String, dynamic>;
+        final data = doc.data();
         data['id'] = doc.id;
         return data;
       }).toList();
@@ -359,7 +359,7 @@ class UserRepository {
       await _firestore.terminate().timeout(const Duration(seconds: 3));
       await _firestore.clearPersistence().timeout(const Duration(seconds: 3));
     } catch (e) {
-      print('Failed to clear cache: $e');
+      debugPrint('Failed to clear cache: $e');
     }
   }
 
@@ -383,7 +383,7 @@ class UserRepository {
           .get(const GetOptions(source: Source.server));
       
       final dynamicCategories = qSnapshot.docs
-          .map((doc) => (doc.data() as Map<String, dynamic>)['category']?.toString() ?? '')
+          .map((doc) => doc.data()['category']?.toString() ?? '')
           .where((cat) => cat.isNotEmpty)
           .toSet()
           .toList();
@@ -396,7 +396,7 @@ class UserRepository {
       // 3. 全て失敗した場合のフォールバック
       return ['下水道法', '下水処理', '検定概要'];
     } catch (e) {
-      print('Error fetching categories: $e');
+      debugPrint('Error fetching categories: $e');
       return ['下水道法', '下水処理', '検定概要'];
     }
   }

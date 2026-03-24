@@ -1,6 +1,6 @@
+import 'package:flutter/foundation.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import '../../core/repositories/user_repository_provider.dart';
 
 part 'question_sync_provider.g.dart';
 
@@ -22,9 +22,9 @@ class QuestionSync extends _$QuestionSync {
           .get(const GetOptions(source: Source.server))
           .timeout(const Duration(seconds: 20));
       
-      print('Manual/Background sync: 500 questions prefetched from server.');
+      debugPrint('Manual/Background sync: 500 questions prefetched from server.');
     } catch (e) {
-      print('Sync failed: $e');
+      debugPrint('Sync failed: $e');
       rethrow; // triggerManualSync で捕捉できるように再スロー
     }
   }

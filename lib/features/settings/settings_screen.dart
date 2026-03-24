@@ -29,7 +29,7 @@ class SettingsScreen extends ConsumerWidget {
             onChanged: (val) {
               ref.read(settingsNotifierProvider.notifier).toggleDarkMode(val);
             },
-            activeColor: AppColors.primaryBlue,
+            activeThumbColor: AppColors.primaryBlue,
           ),
           // 文字サイズ設定は削除されました
           const Divider(),
@@ -39,7 +39,7 @@ class SettingsScreen extends ConsumerWidget {
             subtitle: const Text('毎日の学習継続をサポートします'),
             value: settings.enableNotifications,
             onChanged: (val) => ref.read(settingsNotifierProvider.notifier).toggleNotifications(val),
-            activeColor: AppColors.primaryBlue,
+            activeThumbColor: AppColors.primaryBlue,
           ),
           if (settings.enableNotifications) ...[
             ListTile(

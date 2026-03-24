@@ -37,7 +37,7 @@ class _HistoryScreenState extends ConsumerState<HistoryScreen> {
             );
           }
 
-          final categories = ['すべて', ...history.map((e) => e['category'] as String? ?? '未分類').toSet().toList()];
+          final categories = ['すべて', ...history.map((e) => e['category'] as String? ?? '未分類').toSet()];
 
           List<Map<String, dynamic>> filteredList = history.where((item) {
             if (_selectedCategory == 'すべて') return true;
@@ -75,7 +75,7 @@ class _HistoryScreenState extends ConsumerState<HistoryScreen> {
                     Expanded(
                       flex: 1,
                       child: DropdownButtonFormField<String>(
-                        value: categories.contains(_selectedCategory) ? _selectedCategory : 'すべて',
+                        initialValue: categories.contains(_selectedCategory) ? _selectedCategory : 'すべて',
                         decoration: const InputDecoration(
                           labelText: 'カテゴリ',
                           contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
@@ -91,7 +91,7 @@ class _HistoryScreenState extends ConsumerState<HistoryScreen> {
                     Expanded(
                       flex: 1,
                       child: DropdownButtonFormField<String>(
-                        value: _sortOrder,
+                        initialValue: _sortOrder,
                         decoration: const InputDecoration(
                           labelText: '並び替え',
                           contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),

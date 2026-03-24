@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../../shared/models/quiz_models.dart';
 import '../../core/repositories/user_repository_provider.dart';
@@ -87,7 +88,7 @@ class QuizNotifier extends _$QuizNotifier {
     } catch (e) {
       // 保存失敗をUIに通知（オフライン時はFirestoreキューに入っているため問題なし）
       state = state.copyWith(saveError: '結果の保存に失敗しました: $e');
-      print('Failed to save quiz result: $e');
+      debugPrint('Failed to save quiz result: $e');
     }
   }
 
@@ -108,7 +109,7 @@ class QuizNotifier extends _$QuizNotifier {
       try {
         await _saveResult().timeout(const Duration(seconds: 15));
       } catch (e) {
-        print('abortQuiz: Error saving results: $e');
+        debugPrint('abortQuiz: Error saving results: $e');
         // 保存失敗しても状態は完了のまま
       }
     } else {

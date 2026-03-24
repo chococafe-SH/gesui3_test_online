@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../../core/repositories/user_repository_provider.dart';
 import 'auth_provider.dart';
@@ -17,6 +18,6 @@ Future<void> initUser(InitUserRef ref) async {
   } catch (e) {
     // オフラインや初期化失敗時でもアプリは続行可能
     // Firestoreのオフラインキューに積まれるので、次回オンライン時に反映される
-    print('User initialization skipped (offline or error): $e');
+    debugPrint('User initialization skipped (offline or error): $e');
   }
 }

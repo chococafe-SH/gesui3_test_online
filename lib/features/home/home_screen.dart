@@ -371,7 +371,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       barrierColor: Colors.black54,
       transitionDuration: const Duration(milliseconds: 300),
       pageBuilder: (context, anim1, anim2) => const _CategorySelectionDialog(),
-      transitionBuilder: (context, anim1, anim2, child) {
+      transitionBuilder: (context, anim1, _, child) {
         return FadeTransition(opacity: anim1, child: ScaleTransition(scale: anim1, child: child));
       },
     );
@@ -632,7 +632,7 @@ class _CategorySelectionDialog extends ConsumerWidget {
                   child: ListView.separated(
                     shrinkWrap: true,
                     itemCount: categories.length,
-                    separatorBuilder: (_, __) => const SizedBox(height: 12),
+                    separatorBuilder: (_, _) => const SizedBox(height: 12),
                     itemBuilder: (context, index) {
                       final category = categories[index];
                       return Container(

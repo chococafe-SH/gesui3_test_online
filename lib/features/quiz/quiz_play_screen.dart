@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../shared/theme/app_colors.dart';
+import '../../shared/models/quiz_models.dart';
 import 'quiz_provider.dart';
 
 class QuizPlayScreen extends ConsumerWidget {
@@ -51,7 +52,7 @@ class QuizPlayScreen extends ConsumerWidget {
         context: context,
         barrierDismissible: false,
         barrierLabel: '',
-        pageBuilder: (ctx, _, __) => const Center(child: CircularProgressIndicator()),
+        pageBuilder: (ctx, _, _) => const Center(child: CircularProgressIndicator()),
       );
 
       try {
@@ -67,12 +68,19 @@ class QuizPlayScreen extends ConsumerWidget {
     return false;
   }
 
-  Widget _buildQuestionScreen(BuildContext context, WidgetRef ref, quizState) {
+  Widget _buildQuestionScreen(BuildContext context, WidgetRef ref, QuizState quizState) {
     final question = quizState.currentQuestion;
     final isShowingFeedback = quizState.showingFeedback;
 
-    return WillPopScope(
-      onWillPop: () => _onWillPop(context, ref),
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) async {
+        if (didPop) return;
+        final shouldPop = await _onWillPop(context, ref);
+        if (shouldPop && context.mounted) {
+          Navigator.of(context).pop();
+        }
+      },
       child: Scaffold(
         appBar: AppBar(
           title: Text('問題 ${quizState.currentIndex + 1} / ${quizState.questions.length}'),
@@ -257,10 +265,11 @@ class QuizPlayScreen extends ConsumerWidget {
           ],
         ),
       ),
-    ));
-  }
+    ),
+  );
+}
 
-  Widget _buildResultScreen(BuildContext context, WidgetRef ref, quizState) {
+  Widget _buildResultScreen(BuildContext context, WidgetRef ref, QuizState quizState) {
     // 正答数を計算
     int correctCount = 0;
     for (int i = 0; i < quizState.questions.length; i++) {

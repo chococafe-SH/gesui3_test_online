@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../shared/theme/app_colors.dart';
 import '../quiz/quiz_provider.dart';
-import '../../shared/models/quiz_models.dart';
 
 class HistoryDetailScreen extends ConsumerWidget {
   final Map<String, dynamic> record;
@@ -180,7 +179,7 @@ class HistoryDetailScreen extends ConsumerWidget {
                           style: const TextStyle(fontSize: 14, height: 1.6),
                         ),
                       ),
-                    ] else ...[
+                    ] else
                       const Center(
                         child:  Padding(
                           padding: EdgeInsets.symmetric(vertical: 20),
@@ -193,7 +192,6 @@ class HistoryDetailScreen extends ConsumerWidget {
                           ),
                         ),
                       ),
-                    ],
                   ],
                 ),
               );

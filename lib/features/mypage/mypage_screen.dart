@@ -167,7 +167,7 @@ class _RadarChartSection extends StatelessWidget {
     // RadarChart用のデータセット（正解率 0.0〜1.0 を値として使用）
     final radarDataSets = [
       RadarDataSet(
-        fillColor: AppColors.primaryBlue.withOpacity(0.25),
+        fillColor: AppColors.primaryBlue.withValues(alpha: 0.25),
         borderColor: AppColors.primaryBlue,
         borderWidth: 2,
         entryRadius: 4,

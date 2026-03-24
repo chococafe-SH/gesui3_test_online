@@ -103,10 +103,10 @@ Future<String> seedQuestions() async {
     developer.log('最終結果: サーバー上 $serverCount件 (fromCache=$fromCache)', name: 'Seeder');
 
     if (fromCache) {
-      return '警告: サーバーへの接続ができません（オフライン状態）。\nローカルには${successCount}件保存しましたが、サーバーには未反映です。\nネットワーク接続を確認してください。';
+      return '警告: サーバーへの接続ができません（オフライン状態）。\nローカルには$successCount件保存しましたが、サーバーには未反映です。\nネットワーク接続を確認してください。';
     }
 
-    return '完了！サーバーに${serverCount}件の問題を確認しました。\n（今回${successCount}件を投入）\nFirebase Consoleで questions コレクションを確認してください。';
+    return '完了！サーバーに$serverCount件の問題を確認しました。\n（今回$successCount件を投入）\nFirebase Consoleで questions コレクションを確認してください。';
   } catch (e, stack) {
     developer.log('Seeder エラー: $e', name: 'Seeder', error: e, stackTrace: stack);
     return '失敗: $e';
