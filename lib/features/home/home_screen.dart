@@ -668,3 +668,9 @@ class _CategorySelectionDialog extends ConsumerWidget {
     );
   }
 }
+          ),
+        ),
+      ),
+    );
+  }
+}
