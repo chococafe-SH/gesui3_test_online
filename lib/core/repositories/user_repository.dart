@@ -401,25 +401,6 @@ class UserRepository {
     }
   }
 
-}
-      
-      final dynamicCategories = qSnapshot.docs
-          .map((doc) => doc.data()['category']?.toString() ?? '')
-          .where((cat) => cat.isNotEmpty)
-          .toSet()
-          .toList();
-
-      if (dynamicCategories.isNotEmpty) {
-        dynamicCategories.sort();
-        return dynamicCategories;
-      }
-      return ['下水道法', '下水処理', '検定概要'];
-    } catch (e) {
-      debugPrint('Error fetching categories: $e');
-      return ['下水道法', '下水処理', '検定概要'];
-    }
-  }
-
   Stream<DocumentSnapshot<Map<String, dynamic>>> getUserPremiumStream(String uid) {
     return _firestore.collection('users').doc(uid).snapshots();
   }

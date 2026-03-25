@@ -6,7 +6,7 @@ part of 'init_user_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$initUserHash() => r'616b65dbc4365a5116f6badbb2da2f9e08f9c408';
+String _$initUserHash() => r'116dceb0fcf13271447f31217ca9c970020ff84b';
 
 /// サインイン完了後にユーザードキュメントを初期化するプロバイダー。
 /// オフライン時はタイムアウトでスキップし、アプリは継続利用可能。

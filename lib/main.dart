@@ -8,10 +8,19 @@ import 'features/quiz/question_sync_provider.dart';
 import 'features/settings/settings_provider.dart';
 import 'core/services/notification_service.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/services.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  
+  // スマホのホームボタン等のシステムUIを隠す（没入モード）
+  await SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
+  
   await Firebase.initializeApp();
+  
+  // Mobile Adsの初期化
+  await MobileAds.instance.initialize();
   
   // 通知サービスの初期化
   await NotificationService().init();

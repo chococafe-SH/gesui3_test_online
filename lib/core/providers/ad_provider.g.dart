@@ -1,26 +1,26 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'question_sync_provider.dart';
+part of 'ad_provider.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$questionSyncHash() => r'b7021482804e1b624afb5c6b95e2de442f086113';
+String _$adNotifierHash() => r'0a3ee67eb80fb47356e68e6b110e658a831a8655';
 
-/// See also [QuestionSync].
-@ProviderFor(QuestionSync)
-final questionSyncProvider =
-    AutoDisposeAsyncNotifierProvider<QuestionSync, void>.internal(
-      QuestionSync.new,
-      name: r'questionSyncProvider',
+/// See also [AdNotifier].
+@ProviderFor(AdNotifier)
+final adNotifierProvider =
+    AutoDisposeNotifierProvider<AdNotifier, bool>.internal(
+      AdNotifier.new,
+      name: r'adNotifierProvider',
       debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
           ? null
-          : _$questionSyncHash,
+          : _$adNotifierHash,
       dependencies: null,
       allTransitiveDependencies: null,
     );
 
-typedef _$QuestionSync = AutoDisposeAsyncNotifier<void>;
+typedef _$AdNotifier = AutoDisposeNotifier<bool>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

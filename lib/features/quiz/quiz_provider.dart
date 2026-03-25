@@ -3,6 +3,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../../shared/models/quiz_models.dart';
 import '../../core/repositories/user_repository_provider.dart';
 import '../auth/auth_provider.dart';
+import '../../core/providers/premium_provider.dart';
 
 part 'quiz_provider.g.dart';
 
@@ -128,7 +129,8 @@ class QuizNotifier extends _$QuizNotifier {
 @riverpod
 Future<List<Question>> onlineQuestions(OnlineQuestionsRef ref, String category) async {
   final repository = ref.watch(userRepositoryProvider);
-  return repository.fetchQuestions(category);
+  final isPremium = ref.watch(premiumNotifierProvider).isPremium;
+  return repository.fetchQuestions(category, isPremium: isPremium);
 }
 
 // サンプルデータ供給用

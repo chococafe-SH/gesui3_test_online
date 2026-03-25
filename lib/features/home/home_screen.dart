@@ -7,6 +7,7 @@ import '../quiz/quiz_play_screen.dart';
 import '../../core/utils/seeder.dart';
 import '../../core/repositories/user_repository_provider.dart';
 import '../../core/providers/premium_provider.dart';
+import '../../core/providers/rewarded_ad_provider.dart';
 import '../mypage/mypage_provider.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
@@ -17,6 +18,14 @@ class HomeScreen extends ConsumerStatefulWidget {
 }
 
 class _HomeScreenState extends ConsumerState<HomeScreen> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(rewardedAdProvider.notifier).loadAd();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -34,7 +43,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   _buildUserInfo(context, ref),
                   const SizedBox(height: 32),
                   _buildProgressCard(context, ref),
-                  const SizedBox(height: 40),
+                  const SizedBox(height: 32),
+                  _buildRewardAdSection(context, ref),
+                  const SizedBox(height: 8),
                   _buildMenuSection(context, ref),
                   const SizedBox(height: 40),
                   _buildDevTools(context),
@@ -89,7 +100,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               ),
             ),
             Text(
-              '集中攻略 1.0.1',
+              '集中攻略',
               style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                 color: Colors.white,
                 fontWeight: FontWeight.w900,
@@ -241,6 +252,87 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             error: (err, stack) => const Center(child: Text('読み込みエラー')),
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildRewardAdSection(BuildContext context, WidgetRef ref) {
+    final premiumState = ref.watch(premiumNotifierProvider);
+    // 課金済みのプレミアムユーザーには表示しない
+    if (premiumState.isPremium && premiumState.unlockedUntil == null) {
+      return const SizedBox.shrink();
+    }
+
+    final adState = ref.watch(rewardedAdProvider);
+    final isAdLoaded = adState.isAdLoaded;
+
+    return Container(
+      width: double.infinity,
+      margin: const EdgeInsets.only(bottom: 24),
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: AppColors.primaryBlue.withAlpha(15),
+        borderRadius: BorderRadius.circular(24),
+        border: Border.all(color: AppColors.primaryBlue.withAlpha(40)),
+      ),
+      child: Column(
+        children: [
+          if (premiumState.unlockedUntil != null) ...[
+            const Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.timer, color: AppColors.primaryBlue),
+                SizedBox(width: 8),
+                Text('一時的に全問題解放中！', style: TextStyle(fontWeight: FontWeight.w800, color: AppColors.primaryDarkBlue, fontSize: 16)),
+              ],
+            ),
+            const SizedBox(height: 8),
+            Text('有効期限: ${premiumState.unlockedUntil!.hour.toString().padLeft(2, '0')}:${premiumState.unlockedUntil!.minute.toString().padLeft(2, '0')} まで', style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.black54)),
+            const SizedBox(height: 16),
+          ] else ...[
+            const Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.ondemand_video_rounded, color: AppColors.primaryBlue),
+                SizedBox(width: 8),
+                Text('動画広告を見て1時間全問解放', style: TextStyle(fontWeight: FontWeight.w800, color: AppColors.primaryDarkBlue, fontSize: 16)),
+              ],
+            ),
+            const SizedBox(height: 8),
+            const Text('何度でも延長可能です。', style: TextStyle(fontSize: 12, color: Colors.black54)),
+            const SizedBox(height: 16),
+          ],
+          SizedBox(
+            width: double.infinity,
+            child: ElevatedButton.icon(
+              onPressed: isAdLoaded ? () {
+                ref.read(rewardedAdProvider.notifier).showAd(
+                  onRewardEarned: () {
+                    ref.read(premiumNotifierProvider.notifier).addRewardTime(const Duration(hours: 1));
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('🎉 1時間全問題が解放されました！')),
+                    );
+                  },
+                );
+              } : null,
+              icon: isAdLoaded 
+                ? const Icon(Icons.play_circle_fill, size: 24) 
+                : const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white)),
+              label: Text(
+                isAdLoaded 
+                  ? (premiumState.unlockedUntil != null ? '動画を見てさらに 1時間延長' : '動画を見る (+1時間)')
+                  : '広告を準備中...',
+                style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold)
+              ),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: isAdLoaded ? AppColors.primaryBlue : Colors.grey,
+                foregroundColor: Colors.white,
+                padding: const EdgeInsets.symmetric(vertical: 14),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -566,7 +658,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         builder: (context) => const Center(child: CircularProgressIndicator()),
       );
 
-      final isPremium = ref.read(premiumNotifierProvider);
+      final isPremium = ref.read(premiumNotifierProvider).isPremium;
       final questions = await ref.read(weakQuestionsProvider(weakIds, isPremium).future);
 
       if (context.mounted) {
@@ -662,12 +754,6 @@ class _CategorySelectionDialog extends ConsumerWidget {
                 child: const Text('キャンセル', style: TextStyle(color: Colors.grey, fontSize: 16, fontWeight: FontWeight.w600)),
               ),
             ],
-          ),
-        ),
-      ),
-    );
-  }
-}
           ),
         ),
       ),
