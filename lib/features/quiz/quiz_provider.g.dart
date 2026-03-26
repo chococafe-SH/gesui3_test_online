@@ -6,7 +6,7 @@ part of 'quiz_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$onlineQuestionsHash() => r'43507a935c7d5444c41b649a26f5dec93f54411b';
+String _$onlineQuestionsHash() => r'6ecd2b16cf4c81a6ad91a6fd14f7dfb626677997';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -148,7 +148,7 @@ class _OnlineQuestionsProviderElement
   String get category => (origin as OnlineQuestionsProvider).category;
 }
 
-String _$sampleQuestionsHash() => r'32b8a2ad370f03e2fc6cc34b3ef8e18374c02359';
+String _$sampleQuestionsHash() => r'ab7509e60b4ffda3457a4d8f0c7bbfcd71f61e24';
 
 /// See also [sampleQuestions].
 @ProviderFor(sampleQuestions)
@@ -297,7 +297,7 @@ class _WeakQuestionsProviderElement
   bool get isPremium => (origin as WeakQuestionsProvider).isPremium;
 }
 
-String _$quizNotifierHash() => r'ba7d4ae6b84819aa8f866fc9195e2107f3192c5d';
+String _$quizNotifierHash() => r'7042d706b7ef06e128c45452e23605afa6765677';
 
 /// See also [QuizNotifier].
 @ProviderFor(QuizNotifier)

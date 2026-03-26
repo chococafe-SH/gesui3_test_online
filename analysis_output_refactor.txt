@@ -1,0 +1,16 @@
+Analyzing gesui3_test_online...                                 
+
+  error - The argument type 'Stream<List<QuizRecord>> Function(QuizHistoryRef)' can't be assigned to the parameter type 'Stream<List<Map<String, dynamic>>> Function(AutoDisposeStreamProviderRef<List<Map<String, dynamic>>>)'.  - lib\features\history\history_provider.g.dart:15:7 - argument_type_not_assignable
+  error - The argument type 'List<Map<String, dynamic>>' can't be assigned to the parameter type 'List<QuizRecord>'.  - lib\features\history\history_screen.dart:35:29 - argument_type_not_assignable
+   info - 'value' is deprecated and shouldn't be used. Use initialValue instead. This will set the initial value for the form field. This feature was deprecated after v3.33.0-1.0.pre - lib\features\history\widgets\history_filter_bar.dart:37:15 - deprecated_member_use
+   info - 'value' is deprecated and shouldn't be used. Use initialValue instead. This will set the initial value for the form field. This feature was deprecated after v3.33.0-1.0.pre - lib\features\history\widgets\history_filter_bar.dart:56:15 - deprecated_member_use
+   info - 'listenSelf' is deprecated and shouldn't be used. Will be removed in 3.0. Use Notifier.listenSelf instead - lib\features\settings\settings_provider.dart:24:9 - deprecated_member_use
+  error - The constructor being called isn't a const constructor - lib\main.dart:34:14 - const_with_non_const
+warning - The declaration '_cacheWidth' isn't referenced - lib\shared\widgets\question_image.dart:40:12 - unused_element
+warning - The declaration '_cacheHeight' isn't referenced - lib\shared\widgets\question_image.dart:41:12 - unused_element
+   info - Unnecessary use of multiple underscores - lib\shared\widgets\question_image.dart:202:35 - unnecessary_underscores
+   info - Unnecessary use of multiple underscores - lib\shared\widgets\question_image.dart:216:40 - unnecessary_underscores
+   info - Unnecessary use of multiple underscores - lib\shared\widgets\question_image.dart:219:40 - unnecessary_underscores
+   info - Unnecessary use of multiple underscores - lib\shared\widgets\question_image.dart:219:44 - unnecessary_underscores
+
+12 issues found. (ran in 6.2s)

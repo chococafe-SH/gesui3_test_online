@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import '../../shared/models/quiz_models.dart';
+import '../../shared/models/question.dart';
+import 'models/quiz_state.dart';
 import '../../core/repositories/user_repository_provider.dart';
 import '../auth/auth_provider.dart';
 import '../../core/providers/premium_provider.dart';
@@ -50,7 +51,7 @@ class QuizNotifier extends _$QuizNotifier {
 
     final repository = ref.read(userRepositoryProvider);
     
-    int correctCount = 0;
+    final correctCount = state.correctCount;
     final List<Map<String, dynamic>> records = [];
 
     for (int i = 0; i < state.questions.length; i++) {
@@ -60,8 +61,6 @@ class QuizNotifier extends _$QuizNotifier {
       if (selected == null) continue; // 未回答の場合はスキップ
       
       final isCorrect = selected == question.correctOptionIndex;
-      
-      if (isCorrect) correctCount++;
       
       records.add({
         'questionId': question.id,
@@ -78,6 +77,8 @@ class QuizNotifier extends _$QuizNotifier {
         ? state.questions.first.category ?? '未分類' 
         : '不明';
 
+    state = state.copyWith(isSaving: true, saveError: null);
+
     try {
       await repository.saveQuizResult(
         user.uid,
@@ -86,9 +87,13 @@ class QuizNotifier extends _$QuizNotifier {
         state.questions.length, // 回答数ではなくクイズ全体の総数を記録
         correctCount,
       );
+      state = state.copyWith(isSaving: false);
     } catch (e) {
       // 保存失敗をUIに通知（オフライン時はFirestoreキューに入っているため問題なし）
-      state = state.copyWith(saveError: '結果の保存に失敗しました: $e');
+      state = state.copyWith(
+        isSaving: false,
+        saveError: '結果の保存に失敗しました: $e',
+      );
       debugPrint('Failed to save quiz result: $e');
     }
   }
@@ -138,26 +143,26 @@ Future<List<Question>> onlineQuestions(OnlineQuestionsRef ref, String category) 
 List<Question> sampleQuestions(SampleQuestionsRef ref) {
 
   return [
-    const Question(
+    Question(
       id: 'q1',
       text: '下水道法において、公共下水道の設置及び管理は原則として誰が行うものとされているか？',
-      options: ['国', '地方公共団体（市町村等）', '民間事業者', '都道府県知事'],
+      options: const ['国', '地方公共団体（市町村等）', '民間事業者', '都道府県知事'],
       correctOptionIndex: 1,
       explanation: '下水道法第3条により、公共下水道の設置、改築、修繕、維持その他の管理は、市町村が行うものとされています。',
       category: '下水道法',
     ),
-    const Question(
+    Question(
       id: 'q2',
       text: '活性汚泥法において、曝気槽内の微生物濃度を示す指標として一般的に用いられるものはどれか？',
-      options: ['BOD', 'COD', 'MLSS', 'DO'],
+      options: const ['BOD', 'COD', 'MLSS', 'DO'],
       correctOptionIndex: 2,
       explanation: 'MLSS（活性汚泥浮遊物質）は、曝気槽内の混合液中の浮遊物濃度を指し、微生物量の目安として最も一般的に用いられます。',
       category: '下水処理',
     ),
-    const Question(
+    Question(
       id: 'q3',
       text: '下水道第3種技術検定の対象となるのは、主にどのような業務か？',
-      options: ['下水道の設計', '下水道の工事監督', '下水道の維持管理', '下水道の計画立案'],
+      options: const ['下水道の設計', '下水道の工事監督', '下水道の維持管理', '下水道の計画立案'],
       correctOptionIndex: 2,
       explanation: '第3種技術検定は、主に下水道施設の維持管理（運転管理・点検整備など）に関する技術を問うものです。',
       category: '検定概要',

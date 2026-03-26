@@ -1,11 +1,5 @@
 Analyzing gesui3_test_online...                                 
 
-  error - The property 'length' can't be accessed on the type 'List<String>' in a constant expression - lib\core\repositories\user_repository.dart:292:7 - const_eval_property_access
-  error - The property 'length' can't be accessed on the type 'List<String>' in a constant expression - lib\core\repositories\user_repository.dart:300:7 - const_eval_property_access
-  error - The property 'length' can't be accessed on the type 'List<String>' in a constant expression - lib\core\repositories\user_repository.dart:308:7 - const_eval_property_access
-  error - Expected a method, getter, setter or operator declaration - lib\features\history\history_screen.dart:204:1 - expected_executable
-  error - Expected a method, getter, setter or operator declaration - lib\features\history\history_screen.dart:204:2 - expected_executable
-  error - Expected a method, getter, setter or operator declaration - lib\features\history\history_screen.dart:204:3 - expected_executable
    info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\history\widgets\option_tile.dart:26:63 - deprecated_member_use
    info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\history\widgets\option_tile.dart:39:61 - deprecated_member_use
 warning - The value of the local variable 'colors' isn't used - lib\features\history\widgets\question_detail_card.dart:73:11 - unused_local_variable
@@ -13,11 +7,6 @@ warning - The value of the local variable 'colors' isn't used - lib\features\his
    info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\history\widgets\question_detail_card.dart:101:60 - deprecated_member_use
 warning - Unused import: '../../core/utils/level_system.dart' - lib\features\mypage\mypage_screen.dart:4:8 - unused_import
    info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\mypage\widgets\radar_chart_section.dart:58:42 - deprecated_member_use
-  error - Invalid constant value - lib\features\quiz\models\quiz_state.freezed.dart:211:15 - invalid_constant
-  error - The property 'isNotEmpty' can't be accessed on the type 'List<Question>' in a constant expression - lib\features\quiz\quiz_provider.dart:15:12 - const_eval_property_access
-  error - The property 'length' can't be accessed on the type 'List<String>' in a constant expression - lib\features\quiz\quiz_provider.dart:146:5 - const_eval_property_access
-  error - The property 'length' can't be accessed on the type 'List<String>' in a constant expression - lib\features\quiz\quiz_provider.dart:154:5 - const_eval_property_access
-  error - The property 'length' can't be accessed on the type 'List<String>' in a constant expression - lib\features\quiz\quiz_provider.dart:162:5 - const_eval_property_access
    info - 'listenSelf' is deprecated and shouldn't be used. Will be removed in 3.0. Use Notifier.listenSelf instead - lib\features\settings\settings_provider.dart:24:9 - deprecated_member_use
 warning - This 'onError' handler must return a value assignable to 'InitializationStatus', but ends without returning a value - lib\main.dart:32:52 - body_might_complete_normally_catch_error
    info - Unnecessary use of multiple underscores - lib\shared\widgets\question_image.dart:189:35 - unnecessary_underscores
@@ -25,4 +14,4 @@ warning - This 'onError' handler must return a value assignable to 'Initializati
    info - Unnecessary use of multiple underscores - lib\shared\widgets\question_image.dart:206:40 - unnecessary_underscores
    info - Unnecessary use of multiple underscores - lib\shared\widgets\question_image.dart:206:44 - unnecessary_underscores
 
-24 issues found. (ran in 6.7s)
+13 issues found. (ran in 6.4s)

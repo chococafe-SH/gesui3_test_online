@@ -1,39 +1,69 @@
 Analyzing gesui3_test_online...                                 
 
-   info - Don't invoke 'print' in production code - lib\core\repositories\user_repository.dart:35:7 - avoid_print
-   info - Don't invoke 'print' in production code - lib\core\repositories\user_repository.dart:56:9 - avoid_print
-   info - Don't invoke 'print' in production code - lib\core\repositories\user_repository.dart:148:7 - avoid_print
-   info - Don't invoke 'print' in production code - lib\core\repositories\user_repository.dart:150:7 - avoid_print
-   info - Don't invoke 'print' in production code - lib\core\repositories\user_repository.dart:168:7 - avoid_print
-   info - Don't invoke 'print' in production code - lib\core\repositories\user_repository.dart:170:7 - avoid_print
-   info - Don't invoke 'print' in production code - lib\core\repositories\user_repository.dart:173:7 - avoid_print
-   info - Don't invoke 'print' in production code - lib\core\repositories\user_repository.dart:190:5 - avoid_print
-warning - Unnecessary cast - lib\core\repositories\user_repository.dart:205:24 - unnecessary_cast
-   info - Don't invoke 'print' in production code - lib\core\repositories\user_repository.dart:209:11 - avoid_print
-   info - Don't invoke 'print' in production code - lib\core\repositories\user_repository.dart:227:9 - avoid_print
-   info - Don't invoke 'print' in production code - lib\core\repositories\user_repository.dart:230:7 - avoid_print
-   info - Don't invoke 'print' in production code - lib\core\repositories\user_repository.dart:235:7 - avoid_print
-   info - Don't invoke 'print' in production code - lib\core\repositories\user_repository.dart:246:7 - avoid_print
-   info - Don't invoke 'print' in production code - lib\core\repositories\user_repository.dart:251:7 - avoid_print
-warning - Unnecessary cast - lib\core\repositories\user_repository.dart:301:22 - unnecessary_cast
-   info - Don't invoke 'print' in production code - lib\core\repositories\user_repository.dart:339:7 - avoid_print
-warning - Unnecessary cast - lib\core\repositories\user_repository.dart:363:26 - unnecessary_cast
-   info - Don't invoke 'print' in production code - lib\core\repositories\user_repository.dart:376:7 - avoid_print
-   info - Unnecessary braces in a string interpolation - lib\core\utils\seeder.dart:106:51 - unnecessary_brace_in_string_interps
-   info - Unnecessary braces in a string interpolation - lib\core\utils\seeder.dart:109:21 - unnecessary_brace_in_string_interps
-   info - Unnecessary braces in a string interpolation - lib\core\utils\seeder.dart:109:52 - unnecessary_brace_in_string_interps
-   info - Don't invoke 'print' in production code - lib\features\auth\init_user_provider.dart:20:5 - avoid_print
-   info - Unnecessary use of 'toList' in a spread - lib\features\history\history_screen.dart:40:103 - unnecessary_to_list_in_spreads
-   info - 'value' is deprecated and shouldn't be used. Use initialValue instead. This will set the initial value for the form field. This feature was deprecated after v3.33.0-1.0.pre - lib\features\history\history_screen.dart:78:25 - deprecated_member_use
-   info - 'value' is deprecated and shouldn't be used. Use initialValue instead. This will set the initial value for the form field. This feature was deprecated after v3.33.0-1.0.pre - lib\features\history\history_screen.dart:94:25 - deprecated_member_use
-   info - Unnecessary use of multiple underscores - lib\features\home\home_screen.dart:634:43 - unnecessary_underscores
-warning - Unused import: '../../core/repositories/user_repository_provider.dart' - lib\features\quiz\question_sync_provider.dart:3:8 - unused_import
-   info - Don't invoke 'print' in production code - lib\features\quiz\question_sync_provider.dart:25:7 - avoid_print
-   info - Don't invoke 'print' in production code - lib\features\quiz\question_sync_provider.dart:27:7 - avoid_print
-   info - Don't use 'BuildContext's across async gaps - lib\features\quiz\quiz_play_screen.dart:52:9 - use_build_context_synchronously
-   info - 'WillPopScope' is deprecated and shouldn't be used. Use PopScope instead. The Android predictive back feature will not work with WillPopScope. This feature was deprecated after v3.12.0-1.0.pre - lib\features\quiz\quiz_play_screen.dart:67:12 - deprecated_member_use
-  error - Expected to find ')' - lib\features\quiz\quiz_play_screen.dart:252:6 - expected_token
-   info - Don't invoke 'print' in production code - lib\features\quiz\quiz_provider.dart:88:7 - avoid_print
-   info - 'activeColor' is deprecated and shouldn't be used. Use activeThumbColor instead. This feature was deprecated after v3.31.0-2.0.pre - lib\features\settings\settings_screen.dart:32:13 - deprecated_member_use
-   info - 'activeColor' is deprecated and shouldn't be used. Use activeThumbColor instead. This feature was deprecated after v3.31.0-2.0.pre - lib\features\settings\settings_screen.dart:42:13 - deprecated_member_use
+  error - The named parameter 'error' is required, but there's no corresponding argument - lib\features\history\history_screen.dart:31:26 - missing_required_argument
+  error - The named parameter 'loading' is required, but there's no corresponding argument - lib\features\history\history_screen.dart:31:26 - missing_required_argument
+  error - Undefined name 'import' - lib\features\history\history_screen.dart:195:1 - undefined_identifier
+  error - Expected to find ',' - lib\features\history\history_screen.dart:195:8 - expected_token
+  error - The element type 'String' can't be assigned to the list type 'Widget' - lib\features\history\history_screen.dart:195:8 - list_element_type_not_assignable
+  error - Expected to find ')' - lib\features\history\history_screen.dart:195:39 - expected_token
+  error - Expected to find ']' - lib\features\history\history_screen.dart:195:39 - expected_token
+warning - Dead code - lib\features\history\history_screen.dart:196:1 - dead_code
+  error - Expected to find ';' - lib\features\history\history_screen.dart:196:1 - expected_token
+  error - Undefined name 'import' - lib\features\history\history_screen.dart:196:1 - undefined_identifier
+  error - Expected to find ';' - lib\features\history\history_screen.dart:197:1 - expected_token
+  error - Undefined name 'import' - lib\features\history\history_screen.dart:197:1 - undefined_identifier
+  error - Expected to find ';' - lib\features\history\history_screen.dart:198:1 - expected_token
+  error - Undefined name 'import' - lib\features\history\history_screen.dart:198:1 - undefined_identifier
+  error - Expected to find ';' - lib\features\history\history_screen.dart:199:1 - expected_token
+  error - Undefined name 'import' - lib\features\history\history_screen.dart:199:1 - undefined_identifier
+  error - Expected to find ';' - lib\features\history\history_screen.dart:200:1 - expected_token
+  error - Undefined name 'import' - lib\features\history\history_screen.dart:200:1 - undefined_identifier
+  error - Expected to find ';' - lib\features\history\history_screen.dart:201:1 - expected_token
+  error - Undefined name 'import' - lib\features\history\history_screen.dart:201:1 - undefined_identifier
+  error - 'class' can't be used as an identifier because it's a keyword - lib\features\history\history_screen.dart:203:1 - expected_identifier_but_got_keyword
+  error - Expected a statement - lib\features\history\history_screen.dart:203:1 - missing_statement
+  error - Expected to find ';' - lib\features\history\history_screen.dart:203:1 - expected_token
+  error - Undefined name 'class' - lib\features\history\history_screen.dart:203:1 - undefined_identifier
+  error - Expected to find ';' - lib\features\history\history_screen.dart:203:7 - expected_token
+  error - 'extends' can't be used as an identifier because it's a keyword - lib\features\history\history_screen.dart:203:21 - expected_identifier_but_got_keyword
+  error - Expected a statement - lib\features\history\history_screen.dart:203:21 - missing_statement
+  error - Expected to find ';' - lib\features\history\history_screen.dart:203:21 - expected_token
+  error - Undefined name 'extends' - lib\features\history\history_screen.dart:203:21 - undefined_identifier
+  error - Expected to find ';' - lib\features\history\history_screen.dart:203:29 - expected_token
+  error - Too many positional arguments: 0 expected, but 1 found - lib\features\history\history_screen.dart:204:23 - extra_positional_arguments_could_be_named
+  error - Invalid constant value - lib\features\history\history_screen.dart:204:24 - invalid_constant
+  error - The getter 'key' isn't defined in a superclass of '_HistoryScreenState' - lib\features\history\history_screen.dart:204:30 - undefined_super_member
+warning - The declaration 'createState' isn't referenced - lib\features\history\history_screen.dart:207:32 - unused_element
+  error - 'class' can't be used as an identifier because it's a keyword - lib\features\history\history_screen.dart:210:1 - expected_identifier_but_got_keyword
+  error - Expected a statement - lib\features\history\history_screen.dart:210:1 - missing_statement
+  error - Expected to find ';' - lib\features\history\history_screen.dart:210:1 - expected_token
+  error - Undefined name 'class' - lib\features\history\history_screen.dart:210:1 - undefined_identifier
+  error - Expected to find ';' - lib\features\history\history_screen.dart:210:7 - expected_token
+  error - 'extends' can't be used as an identifier because it's a keyword - lib\features\history\history_screen.dart:210:27 - expected_identifier_but_got_keyword
+  error - Expected a statement - lib\features\history\history_screen.dart:210:27 - missing_statement
+  error - Expected to find ';' - lib\features\history\history_screen.dart:210:27 - expected_token
+  error - Undefined name 'extends' - lib\features\history\history_screen.dart:210:27 - undefined_identifier
+  error - The operator '<' isn't defined for the type 'Type' - lib\features\history\history_screen.dart:210:48 - undefined_operator
+  error - A comparison expression can't be an operand of another comparison expression - lib\features\history\history_screen.dart:210:62 - equality_cannot_be_equality_operand
+  error - Expected to find ',' - lib\features\history\history_screen.dart:211:10 - expected_token
+  error - Expected to find '}' - lib\features\history\history_screen.dart:211:35 - expected_token
+  error - Expected to find ';' - lib\features\history\history_screen.dart:397:1 - expected_token
+  error - Expected to find ')' - lib\features\history\history_screen.dart:398:1 - expected_token
+  error - Expected to find '}' - lib\features\history\history_screen.dart:398:1 - expected_token
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\history\widgets\option_tile.dart:26:63 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\history\widgets\option_tile.dart:39:61 - deprecated_member_use
+warning - The value of the local variable 'colors' isn't used - lib\features\history\widgets\question_detail_card.dart:73:11 - unused_local_variable
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\history\widgets\question_detail_card.dart:99:41 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\history\widgets\question_detail_card.dart:101:60 - deprecated_member_use
+warning - Unused import: '../../core/utils/level_system.dart' - lib\features\mypage\mypage_screen.dart:4:8 - unused_import
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\mypage\widgets\radar_chart_section.dart:58:42 - deprecated_member_use
+  error - Invalid constant value - lib\features\quiz\models\quiz_state.freezed.dart:211:15 - invalid_constant
+  error - The property 'isNotEmpty' can't be accessed on the type 'List<Question>' in a constant expression - lib\features\quiz\quiz_provider.dart:15:12 - const_eval_property_access
+   info - 'listenSelf' is deprecated and shouldn't be used. Will be removed in 3.0. Use Notifier.listenSelf instead - lib\features\settings\settings_provider.dart:24:9 - deprecated_member_use
+warning - This 'onError' handler must return a value assignable to 'InitializationStatus', but ends without returning a value - lib\main.dart:32:52 - body_might_complete_normally_catch_error
+   info - Unnecessary use of multiple underscores - lib\shared\widgets\question_image.dart:189:35 - unnecessary_underscores
+   info - Unnecessary use of multiple underscores - lib\shared\widgets\question_image.dart:203:40 - unnecessary_underscores
+   info - Unnecessary use of multiple underscores - lib\shared\widgets\question_image.dart:206:40 - unnecessary_underscores
+   info - Unnecessary use of multiple underscores - lib\shared\widgets\question_image.dart:206:44 - unnecessary_underscores
 
+65 issues found. (ran in 6.6s)

@@ -16,23 +16,17 @@ class AppTheme {
       scaffoldBackgroundColor: AppColors.background,
       textTheme: GoogleFonts.notoSansJpTextTheme().copyWith(
         displayLarge: GoogleFonts.notoSansJp(
-          color: AppColors.textPrimary,
           fontWeight: FontWeight.bold,
         ),
         titleLarge: GoogleFonts.notoSansJp(
-          color: AppColors.textPrimary,
           fontWeight: FontWeight.w600,
         ),
         bodyLarge: GoogleFonts.notoSansJp(
-          color: AppColors.textPrimary,
         ),
         bodyMedium: GoogleFonts.notoSansJp(
-          color: AppColors.textSecondary,
         ),
       ),
       appBarTheme: const AppBarTheme(
-        backgroundColor: AppColors.surface,
-        foregroundColor: AppColors.textPrimary,
         elevation: 0,
         centerTitle: true,
       ),
@@ -44,6 +38,9 @@ class AppTheme {
           side: const BorderSide(color: AppColors.border, width: 0.5),
         ),
       ),
+      extensions: const [
+        AppColorsTheme.light,
+      ],
     );
   }
 
@@ -62,34 +59,30 @@ class AppTheme {
       scaffoldBackgroundColor: AppColors.backgroundDark,
       textTheme: GoogleFonts.notoSansJpTextTheme().copyWith(
         displayLarge: GoogleFonts.notoSansJp(
-          color: AppColors.textPrimaryDark,
           fontWeight: FontWeight.bold,
         ),
         titleLarge: GoogleFonts.notoSansJp(
-          color: AppColors.textPrimaryDark,
           fontWeight: FontWeight.w600,
         ),
         bodyLarge: GoogleFonts.notoSansJp(
-          color: AppColors.textPrimaryDark,
         ),
         bodyMedium: GoogleFonts.notoSansJp(
-          color: AppColors.textSecondaryDark,
         ),
       ),
       appBarTheme: const AppBarTheme(
-        backgroundColor: AppColors.surfaceDark,
-        foregroundColor: AppColors.textPrimaryDark,
         elevation: 0,
         centerTitle: true,
       ),
       cardTheme: CardThemeData(
-        color: AppColors.surfaceDark,
         elevation: 2,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16),
-          side: const BorderSide(color: AppColors.borderDark, width: 0.5),
+          side: BorderSide(color: AppColorsTheme.dark.border, width: 0.5),
         ),
       ),
+      extensions: const [
+        AppColorsTheme.dark,
+      ],
     );
   }
 }

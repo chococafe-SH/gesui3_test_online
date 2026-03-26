@@ -1,0 +1,6 @@
+Analyzing gesui3_test_online...                                 
+
+   info - 'listenSelf' is deprecated and shouldn't be used. Will be removed in 3.0. Use Notifier.listenSelf instead - lib\features\settings\settings_provider.dart:24:9 - deprecated_member_use
+   info - Unnecessary use of multiple underscores - lib\shared\widgets\question_image.dart:193:35 - unnecessary_underscores
+
+2 issues found. (ran in 7.0s)

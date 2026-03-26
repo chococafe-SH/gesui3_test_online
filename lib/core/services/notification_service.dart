@@ -3,6 +3,7 @@ import 'package:timezone/data/latest_all.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 import 'package:flutter/foundation.dart';
 import 'package:flutter_timezone/flutter_timezone.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class NotificationService {
   static final NotificationService _instance = NotificationService._internal();
@@ -131,3 +132,7 @@ class NotificationService {
     await _notificationsPlugin.cancelAll();
   }
 }
+
+final notificationServiceProvider = Provider<NotificationService>((ref) {
+  return NotificationService();
+});

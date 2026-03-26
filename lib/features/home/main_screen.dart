@@ -74,7 +74,7 @@ class _BannerAdWidgetState extends ConsumerState<BannerAdWidget> {
   }
 
   void _loadAd() {
-    final adUnitId = ref.read(adNotifierProvider.notifier).bannerAdUnitId;
+    final adUnitId = ref.read(adNotifierProvider).bannerAdUnitId;
     _bannerAd = BannerAd(
       adUnitId: adUnitId,
       request: const AdRequest(),

@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../../shared/models/quiz_models.dart';
+import '../../shared/models/question.dart';
 
 class UserRepository {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -239,8 +239,8 @@ class UserRepository {
         final categoryMatch = qCat == normalizedTarget || normalizedTarget == '全て' || normalizedTarget.isEmpty;
         
         // 有料フラグがある場合は、無料(free)に加えて有料(premium)も許可
-        // 未課金の場合は「status が free」または「status フィールドがない」もののみ許可
-        final status = q.status?.toLowerCase() ?? 'free';
+        // 未課金の場合は「status が free」のもののみ許可
+        final status = q.status.name;
         final accessMatch = isPremium || status == 'free';
         
         return categoryMatch && accessMatch;
@@ -261,7 +261,7 @@ class UserRepository {
         final qCat = _normalize(q.category);
         final categoryMatch = qCat == normalizedTarget || normalizedTarget == '全て' || normalizedTarget.isEmpty;
         
-        final status = q.status?.toLowerCase() ?? 'free';
+        final status = q.status.name;
         final accessMatch = isPremium || status == 'free';
 
         return categoryMatch && accessMatch;
@@ -289,23 +289,23 @@ class UserRepository {
   // ハードコードされたサンプルデータ（seeder.dartのデータの一部を移植、またはリファクタリングして共有）
   List<Question> _getHardcodedSamples() {
     return [
-      const Question(
+      Question(
         id: 's1',
         text: '下水道法において、公共下水道の設置及び管理は原則として誰が行うものとされていますか？',
-        options: ['国', '地方公共団体（市町村等）', '民間事業者', '都道府県知事'],
+        options: const ['国', '地方公共団体（市町村等）', '民間事業者', '都道府県知事'],
         correctOptionIndex: 1,
         explanation: '下水道法第3条により、市町村が公衆衛生の向上等のために設置管理します。',
         category: '下水道法',
       ),
-      const Question(
+      Question(
         id: 's2',
         text: 'BOD（生物化学的酸素要求量）の測定において、一般的に採用されている培養期間は何日間ですか？',
-        options: ['1日間', '3日間', '5日間', '20日間'],
+        options: const ['1日間', '3日間', '5日間', '20日間'],
         correctOptionIndex: 2,
         explanation: 'BOD5として知られる通り、20℃で5日間培養した時の酸素消費量を測定します。',
         category: '下水処理',
       ),
-      const Question(
+      Question(
         id: 's3',
         text: '下水道第3種技術検定の対象となるのは、主にどのような業務か？',
         options: ['下水道の設計', '下水道の工事監督', '下水道の維持管理', '下水道の計画立案'],

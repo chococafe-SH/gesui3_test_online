@@ -1,41 +1,53 @@
-import 'dart:io';
 import 'package:flutter/foundation.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'ad_config.dart';
 import 'premium_provider.dart';
 
-// コード生成に依存しないプロバイダー定義
-final adNotifierProvider = ChangeNotifierProvider<AdNotifier>((ref) {
-  return AdNotifier(ref);
-});
+@immutable
+class AdState {
+  final bool showAds;
+  final String bannerAdUnitId;
 
-class AdNotifier extends ChangeNotifier {
-  final Ref ref;
-  bool _showAds = true;
+  const AdState({
+    this.showAds = true,
+    this.bannerAdUnitId = '',
+  });
 
-  AdNotifier(this.ref) {
-    // プレミアム会員状態を監視
-    _updateAdStatus();
-    ref.listen(premiumNotifierProvider, (previous, next) {
-      _updateAdStatus();
-    });
-  }
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is AdState &&
+          showAds == other.showAds &&
+          bannerAdUnitId == other.bannerAdUnitId;
 
-  bool get showAds => _showAds;
+  @override
+  int get hashCode => Object.hash(showAds, bannerAdUnitId);
 
-  void _updateAdStatus() {
-    final isPremium = ref.read(premiumNotifierProvider).isPremium;
-    _showAds = !isPremium;
-    notifyListeners();
-  }
-
-  /// バナー広告のユニットIDを取得（本番ID未取得のため常にテスト用IDを使用）
-  String get bannerAdUnitId {
-    if (Platform.isAndroid) {
-      return 'ca-app-pub-3940256099942544/6300978111'; // Androidテスト用ID
-    } else if (Platform.isIOS) {
-      return 'ca-app-pub-3940256099942544/2934735716'; // iOSテスト用ID
-    }
-    return '';
+  AdState copyWith({
+    bool? showAds,
+    String? bannerAdUnitId,
+  }) {
+    return AdState(
+      showAds: showAds ?? this.showAds,
+      bannerAdUnitId: bannerAdUnitId ?? this.bannerAdUnitId,
+    );
   }
 }
+
+class AdNotifier extends Notifier<AdState> {
+  @override
+  AdState build() {
+    // プレミアム状態をリアクティブに監視
+    // PremiumNotifierがChangeNotifierProviderでも watch により変更時に build が再実行される
+    final isPremium = ref.watch(premiumNotifierProvider).isPremium;
+
+    return AdState(
+      showAds: !isPremium,
+      bannerAdUnitId: AdConfig.bannerAdUnitId,
+    );
+  }
+}
+
+final adNotifierProvider = NotifierProvider<AdNotifier, AdState>(() {
+  return AdNotifier();
+});

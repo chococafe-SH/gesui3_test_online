@@ -29,7 +29,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: context.colors.background,
       body: Stack(
         children: [
           _buildHeaderBackground(context),
@@ -68,8 +68,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [
-            AppColors.primaryBlue,
-            AppColors.primaryDarkBlue,
+            context.colors.primary,
+            context.colors.primaryDark,
           ],
           stops: [0.0, 1.0],
         ),
@@ -163,12 +163,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         child: Container(
           padding: const EdgeInsets.all(28),
           decoration: BoxDecoration(
-            color: Colors.white.withAlpha(160), 
+            color: context.colors.cardBg, 
             borderRadius: BorderRadius.circular(32),
-            border: Border.all(color: Colors.white.withAlpha(100), width: 1.5),
+            border: Border.all(color: context.colors.border.withValues(alpha: 0.5), width: 1.5),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withAlpha(15),
+                color: Colors.black.withValues(alpha: 0.1),
                 blurRadius: 20,
                 offset: const Offset(0, 10),
               ),
@@ -188,7 +188,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     '総合学習状況',
                     style: Theme.of(context).textTheme.titleLarge?.copyWith(
                       fontWeight: FontWeight.w900,
-                      color: AppColors.primaryBlue,
+                      color: context.colors.primary,
                     ),
                   ),
                   const SizedBox(height: 24),
@@ -204,8 +204,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                               value: stats.totalAnswered > 0 ? correctRate / 100 : 0.0,
                               strokeWidth: 12,
                               strokeCap: StrokeCap.round,
-                              backgroundColor: AppColors.primaryBlue.withAlpha(30),
-                              valueColor: const AlwaysStoppedAnimation<Color>(AppColors.secondaryGreen),
+                              backgroundColor: context.colors.primary.withValues(alpha: 0.1),
+                              valueColor: AlwaysStoppedAnimation<Color>(context.colors.correct),
                             ),
                           ),
                           Column(
@@ -214,7 +214,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                 '${correctRate.toStringAsFixed(0)}%',
                                 style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                                   fontWeight: FontWeight.w900,
-                                  color: AppColors.primaryBlue,
+                                  color: context.colors.primary,
                                 ),
                               ),
                               Text('全${stats.totalAnswered}問', style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold)),
@@ -236,8 +236,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                               child: LinearProgressIndicator(
                                 value: xpProgress,
                                 minHeight: 10,
-                                backgroundColor: AppColors.primaryBlue.withAlpha(20),
-                                valueColor: const AlwaysStoppedAnimation<Color>(AppColors.secondaryGreen),
+                                backgroundColor: context.colors.primary.withValues(alpha: 0.1),
+                                valueColor: AlwaysStoppedAnimation<Color>(context.colors.correct),
                               ),
                             ),
                           ],
@@ -271,35 +271,35 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       margin: const EdgeInsets.only(bottom: 24),
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: AppColors.primaryBlue.withAlpha(15),
+        color: context.colors.primary.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: AppColors.primaryBlue.withAlpha(40)),
+        border: Border.all(color: context.colors.primary.withValues(alpha: 0.2)),
       ),
       child: Column(
         children: [
           if (premiumState.unlockedUntil != null) ...[
-            const Row(
+            Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(Icons.timer, color: AppColors.primaryBlue),
-                SizedBox(width: 8),
-                Text('一時的に全問題解放中！', style: TextStyle(fontWeight: FontWeight.w800, color: AppColors.primaryDarkBlue, fontSize: 16)),
+                Icon(Icons.timer, color: context.colors.primary),
+                const SizedBox(width: 8),
+                Text('一時的に全問題解放中！', style: TextStyle(fontWeight: FontWeight.w800, color: context.colors.primaryDark, fontSize: 16)),
               ],
             ),
             const SizedBox(height: 8),
-            Text('有効期限: ${premiumState.unlockedUntil!.hour.toString().padLeft(2, '0')}:${premiumState.unlockedUntil!.minute.toString().padLeft(2, '0')} まで', style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.black54)),
+            Text('有効期限: ${premiumState.unlockedUntil!.hour.toString().padLeft(2, '0')}:${premiumState.unlockedUntil!.minute.toString().padLeft(2, '0')} まで', style: TextStyle(fontWeight: FontWeight.bold, color: context.colors.textSecondary)),
             const SizedBox(height: 16),
           ] else ...[
-            const Row(
+            Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(Icons.ondemand_video_rounded, color: AppColors.primaryBlue),
-                SizedBox(width: 8),
-                Text('動画広告を見て1時間全問解放', style: TextStyle(fontWeight: FontWeight.w800, color: AppColors.primaryDarkBlue, fontSize: 16)),
+                Icon(Icons.ondemand_video_rounded, color: context.colors.primary),
+                const SizedBox(width: 8),
+                Text('動画広告を見て1時間全問解放', style: TextStyle(fontWeight: FontWeight.w800, color: context.colors.primaryDark, fontSize: 16)),
               ],
             ),
             const SizedBox(height: 8),
-            const Text('何度でも延長可能です。', style: TextStyle(fontSize: 12, color: Colors.black54)),
+            Text('何度でも延長可能です。', style: TextStyle(fontSize: 12, color: context.colors.textSecondary)),
             const SizedBox(height: 16),
           ],
           SizedBox(
@@ -372,7 +372,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           title: '模擬試験',
           subtitle: '本番形式：全60問\n過去問ベース・実力診断',
           icon: Icons.assignment_turned_in_rounded,
-          colors: [AppColors.primaryBlue.withAlpha(200), AppColors.primaryBlue],
+          colors: [context.colors.primary.withValues(alpha: 0.8), context.colors.primary],
           onTap: () {},
         ),
       ],
@@ -612,7 +612,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 icon: const Icon(Icons.cloud_upload),
                 label: const Text('サンプルデータを投入（シード）'),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.secondaryGreen,
+                  backgroundColor: context.colors.correct,
                   foregroundColor: Colors.white,
                 ),
               ),
@@ -630,13 +630,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        const Text(
+        Text(
           'ver 1.0.0',
-          style: TextStyle(color: AppColors.disabled, fontSize: 12, fontWeight: FontWeight.bold),
+          style: TextStyle(color: context.colors.disabled, fontSize: 12, fontWeight: FontWeight.bold),
         ),
         IconButton(
           onPressed: () => _showDiagnosticResult(context, ref, '自動読込みテスト'),
-          icon: const Icon(Icons.info_outline, size: 16, color: AppColors.disabled),
+          icon: Icon(Icons.info_outline, size: 16, color: context.colors.disabled),
         ),
       ],
     );
@@ -705,18 +705,18 @@ class _CategorySelectionDialog extends ConsumerWidget {
           width: MediaQuery.of(context).size.width * 0.85,
           padding: const EdgeInsets.all(28),
           decoration: BoxDecoration(
-            color: Colors.white.withAlpha(240),
+            color: context.colors.surface,
             borderRadius: BorderRadius.circular(32),
-            boxShadow: [BoxShadow(color: Colors.black.withAlpha(50), blurRadius: 20)],
+            boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.2), blurRadius: 20)],
           ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Icon(Icons.category_rounded, color: AppColors.primaryBlue, size: 48),
+              Icon(Icons.category_rounded, color: context.colors.primary, size: 48),
               const SizedBox(height: 16),
-              const Text('学習カテゴリを選択', style: TextStyle(fontSize: 22, fontWeight: FontWeight.w900, color: AppColors.primaryDarkBlue)),
+              Text('学習カテゴリを選択', style: TextStyle(fontSize: 22, fontWeight: FontWeight.w900, color: context.colors.primaryDark)),
               const SizedBox(height: 8),
-              const Text('試験科目を選んで学習を開始します', style: TextStyle(fontSize: 13, color: AppColors.textSecondary)),
+              Text('試験科目を選んで学習を開始します', style: TextStyle(fontSize: 13, color: context.colors.textSecondary)),
               const SizedBox(height: 24),
               categoriesState.when(
                 data: (categories) => ConstrainedBox(
@@ -729,12 +729,12 @@ class _CategorySelectionDialog extends ConsumerWidget {
                       final category = categories[index];
                       return Container(
                         decoration: BoxDecoration(
-                          color: AppColors.primaryBlue.withAlpha(15),
+                          color: context.colors.primary.withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(16),
                         ),
                         child: ListTile(
-                          title: Text(category, style: const TextStyle(fontWeight: FontWeight.w700, color: AppColors.primaryDarkBlue)),
-                          trailing: const Icon(Icons.play_arrow_rounded, color: AppColors.primaryBlue),
+                          title: Text(category, style: TextStyle(fontWeight: FontWeight.w700, color: context.colors.primaryDark)),
+                          trailing: Icon(Icons.play_arrow_rounded, color: context.colors.primary),
                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
                           onTap: () => Navigator.of(context).pop(category),
                         ),
