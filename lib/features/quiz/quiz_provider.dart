@@ -92,7 +92,7 @@ class QuizNotifier extends _$QuizNotifier {
       // 保存失敗をUIに通知（オフライン時はFirestoreキューに入っているため問題なし）
       state = state.copyWith(
         isSaving: false,
-        saveError: '結果の保存に失敗しました: $e',
+        saveError: '結果の保存に失敗しました。',
       );
       debugPrint('Failed to save quiz result: $e');
     }

@@ -15,6 +15,7 @@ Stream<List<QuizRecord>> quizHistory(QuizHistoryRef ref) {
       .doc(user.uid)
       .collection('history')
       .orderBy('playedAt', descending: true)
+      .limit(100)
       .snapshots()
       .map((snapshot) {
     final records = <QuizRecord>[];

@@ -155,31 +155,34 @@ class UserRepository {
       batch.update(userRef, updateData);
 
 
-      // 3. デバッグログの保存（Firestore上に残す）
-      batch.set(logRef, {
-        'timestamp': FieldValue.serverTimestamp(),
-        'event': 'quiz_finished',
-        'category': category,
-        'recordsCount': questionRecords.length,
-        'totalQuestionsSession': totalQuestions,
-        'correctCount': correctCount,
-        'weakQuestionsAfter': weakQuestions.length,
-        'uid': uid,
-      });
+      // 3. デバッグログの保存（デバッグモード時のみ）
+      if (kDebugMode) {
+        batch.set(logRef, {
+          'timestamp': FieldValue.serverTimestamp(),
+          'event': 'quiz_finished',
+          'category': category,
+          'recordsCount': questionRecords.length,
+          'totalQuestionsSession': totalQuestions,
+          'correctCount': correctCount,
+          'weakQuestionsAfter': weakQuestions.length,
+          'uid': uid,
+        });
+      }
 
       await batch.commit().timeout(const Duration(seconds: 15));
       debugPrint('saveQuizResult: Success for UID: $uid');
     } catch (e) {
       debugPrint('saveQuizResult: Error saving result: $e');
-      // ログだけでも残す試み
-      try {
-        await logRef.set({
-          'timestamp': FieldValue.serverTimestamp(),
-          'event': 'error',
-          'error': e.toString(),
-          'uid': uid,
-        });
-      } catch (_) {}
+      if (kDebugMode) {
+        try {
+          await logRef.set({
+            'timestamp': FieldValue.serverTimestamp(),
+            'event': 'error',
+            'error': e.toString(),
+            'uid': uid,
+          });
+        } catch (_) {}
+      }
       rethrow;
     }
   }
