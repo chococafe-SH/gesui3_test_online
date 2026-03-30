@@ -4,6 +4,7 @@ import '../../../../shared/theme/app_colors.dart';
 import '../../../../shared/widgets/question_image.dart';
 import '../models/quiz_state.dart';
 import '../quiz_provider.dart';
+import '../../../../shared/widgets/math_text.dart';
 import '../../history/widgets/option_tile.dart';
 import 'quiz_feedback_card.dart';
 import 'quiz_exit_dialog.dart';
@@ -65,7 +66,7 @@ class QuizQuestionView extends ConsumerWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
+                          MathText(
                             question.text,
                             style: Theme.of(context).textTheme.titleLarge,
                           ),

@@ -63,7 +63,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     final height = MediaQuery.of(context).size.height * 0.4;
     return Container(
       height: height,
-      decoration: const BoxDecoration(
+      decoration: BoxDecoration(
         gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
@@ -71,9 +71,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             context.colors.primary,
             context.colors.primaryDark,
           ],
-          stops: [0.0, 1.0],
+          stops: const [0.0, 1.0],
         ),
-        borderRadius: BorderRadius.only(
+        borderRadius: const BorderRadius.only(
           bottomLeft: Radius.circular(52),
           bottomRight: Radius.circular(52),
         ),

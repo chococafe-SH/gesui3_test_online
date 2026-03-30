@@ -6,7 +6,7 @@ part of 'history_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$quizHistoryHash() => r'4ac50a5ca6fa22ef9b882231af53252177e7fa1b';
+String _$quizHistoryHash() => r'8394eefe79dcc2a9c4838a821a5dc4dc2ed38027';
 
 /// See also [quizHistory].
 @ProviderFor(quizHistory)

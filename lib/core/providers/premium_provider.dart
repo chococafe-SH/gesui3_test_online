@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 final premiumNotifierProvider = ChangeNotifierProvider<PremiumNotifier>((ref) {
   return PremiumNotifier().._init();
@@ -22,12 +23,28 @@ class PremiumNotifier extends ChangeNotifier {
 
   DateTime? get unlockedUntil => _unlockedUntil;
 
+  static const _storage = FlutterSecureStorage();
+  static const _unlockedKey = 'unlocked_until';
+
   Future<void> _init() async {
-    final prefs = await SharedPreferences.getInstance();
-    final timeStr = prefs.getString('unlocked_until');
-    if (timeStr != null) {
-      _unlockedUntil = DateTime.tryParse(timeStr);
-      _setupExpiryTimer();
+    try {
+      // 古い平文データを安全なストレージに移行して削除
+      final prefs = await SharedPreferences.getInstance();
+      if (prefs.containsKey('unlocked_until')) {
+        final oldTimeStr = prefs.getString('unlocked_until');
+        if (oldTimeStr != null) {
+          await _storage.write(key: _unlockedKey, value: oldTimeStr);
+        }
+        await prefs.remove('unlocked_until');
+      }
+
+      final timeStr = await _storage.read(key: _unlockedKey);
+      if (timeStr != null) {
+        _unlockedUntil = DateTime.tryParse(timeStr);
+        _setupExpiryTimer();
+      }
+    } catch (e) {
+      debugPrint('Secure storage init error: $e');
     }
     notifyListeners();
   }
@@ -45,8 +62,11 @@ class PremiumNotifier extends ChangeNotifier {
       _unlockedUntil = _unlockedUntil!.add(duration);
     }
     
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString('unlocked_until', _unlockedUntil!.toIso8601String());
+    try {
+      await _storage.write(key: _unlockedKey, value: _unlockedUntil!.toIso8601String());
+    } catch (e) {
+      debugPrint('Failed to save reward to secure storage: $e');
+    }
     
     _setupExpiryTimer();
     notifyListeners();

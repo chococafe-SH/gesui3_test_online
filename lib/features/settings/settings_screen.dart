@@ -24,23 +24,23 @@ class SettingsScreen extends ConsumerWidget {
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
-          _buildDisplaySection(ref, settings),
+          _buildDisplaySection(context, ref, settings),
           const Divider(),
           _buildNotificationSection(context, ref, settings),
           const Divider(),
           _buildDataSection(context, ref, isSyncing),
           const SizedBox(height: 32),
-          _buildVersionInfo(),
+          _buildVersionInfo(context),
         ],
       ),
     );
   }
 
-  Widget _buildDisplaySection(WidgetRef ref, AppSettings settings) {
+  Widget _buildDisplaySection(BuildContext context, WidgetRef ref, AppSettings settings) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _buildSectionHeader('表示設定'),
+        _buildSectionHeader(context, '表示設定'),
         SwitchListTile(
           title: const Text('ダークモード'),
           subtitle: const Text('アプリのテーマを暗くします'),
@@ -59,7 +59,7 @@ class SettingsScreen extends ConsumerWidget {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _buildSectionHeader('通知設定'),
+          _buildSectionHeader(context, '通知設定'),
           SwitchListTile(
             title: const Text('学習リマインダー'),
             subtitle: const Text('毎日の学習継続をサポートします'),
@@ -74,7 +74,7 @@ class SettingsScreen extends ConsumerWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _buildSectionHeader('通知設定'),
+        _buildSectionHeader(context, '通知設定'),
         SwitchListTile(
           title: const Text('学習リマインダー'),
           subtitle: const Text('毎日の学習継続をサポートします'),
@@ -166,7 +166,7 @@ class SettingsScreen extends ConsumerWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _buildSectionHeader('データ管理'),
+        _buildSectionHeader(context, 'データ管理'),
         ListTile(
           title: const Text('問題データの手動同期'),
           subtitle: const Text('最新の問題データをサーバーから取得します'),
@@ -225,13 +225,13 @@ class SettingsScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildVersionInfo() {
+  Widget _buildVersionInfo(BuildContext context) {
     return Center(
-      child: Text('Version 1.0.1', style: TextStyle(color: context.colors.textSecondary)),
+      child: Text('Version 1.0.0', style: TextStyle(color: context.colors.textSecondary)),
     );
   }
 
-  Widget _buildSectionHeader(String title) {
+  Widget _buildSectionHeader(BuildContext context, String title) {
     return Padding(
       padding: const EdgeInsets.only(top: 16, bottom: 8, left: 16),
       child: Text(

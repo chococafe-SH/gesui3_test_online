@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../shared/theme/app_colors.dart';
 import '../../../../shared/widgets/question_image.dart';
+import '../../../../shared/widgets/math_text.dart';
 
 class QuizFeedbackCard extends StatelessWidget {
   final bool isCorrect;
@@ -56,7 +57,7 @@ class QuizFeedbackCard extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 10),
-          Text(
+          MathText(
             explanation,
             style: const TextStyle(fontSize: 14, height: 1.5),
           ),

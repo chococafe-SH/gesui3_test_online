@@ -46,6 +46,10 @@ def import_from_csv(db, file_path):
                 'explanation': row.get('explanation', ''),
                 'category': row.get('category', '未分類')
             }
+            if row.get('imageUrl'):
+                question['imageUrl'] = row.get('imageUrl').strip()
+            if row.get('explanationImageUrl'):
+                question['explanationImageUrl'] = row.get('explanationImageUrl').strip()
             questions.append(question)
     return questions
 

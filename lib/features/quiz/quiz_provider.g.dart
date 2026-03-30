@@ -297,7 +297,7 @@ class _WeakQuestionsProviderElement
   bool get isPremium => (origin as WeakQuestionsProvider).isPremium;
 }
 
-String _$quizNotifierHash() => r'7042d706b7ef06e128c45452e23605afa6765677';
+String _$quizNotifierHash() => r'805be0d966530402a295afd7567d17a4edafb2ef';
 
 /// See also [QuizNotifier].
 @ProviderFor(QuizNotifier)

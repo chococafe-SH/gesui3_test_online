@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import '../../../../shared/theme/app_colors.dart';
 import '../../../../shared/models/quiz_record.dart';
 import '../../../../shared/models/question.dart';
+import '../../../../shared/widgets/question_image.dart';
+import '../../../../shared/widgets/math_text.dart';
 import 'option_tile.dart';
 
 class QuestionDetailCard extends StatelessWidget {
@@ -25,6 +27,7 @@ class QuestionDetailCard extends StatelessWidget {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       clipBehavior: Clip.antiAlias,
       child: ExpansionTile(
+        initiallyExpanded: true,
         leading: CircleAvatar(
           backgroundColor: statusBgColor,
           child: Icon(
@@ -32,14 +35,21 @@ class QuestionDetailCard extends StatelessWidget {
             color: statusColor,
           ),
         ),
-        title: Text(
-          question?.text ?? '問題ID: ${answer.questionId}',
-          style: textTheme.titleMedium?.copyWith(
-            fontWeight: FontWeight.bold,
-          ),
-          maxLines: 2,
-          overflow: TextOverflow.ellipsis,
-        ),
+        title: question != null
+            ? MathText(
+                question!.text,
+                style: textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+              )
+            : Text(
+                '問題ID: ${answer.questionId}',
+                style: textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
         subtitle: Row(
           children: [
             Text(
@@ -74,10 +84,12 @@ class QuestionDetailCard extends StatelessWidget {
     return [
       const _SectionLabel('問題全文:'),
       const SizedBox(height: 6),
-      Text(
+      MathText(
         q.text,
         style: textTheme.bodyMedium?.copyWith(height: 1.5),
       ),
+      if (q.imageUrl != null)
+        QuestionImage(imageUrl: q.imageUrl!),
       const SizedBox(height: 20),
       const _SectionLabel('選択肢:'),
       const SizedBox(height: 10),
@@ -99,9 +111,16 @@ class QuestionDetailCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(12),
           border: Border.all(color: context.colors.accent),
         ),
-        child: Text(
-          q.explanation,
-          style: textTheme.bodyMedium?.copyWith(height: 1.6),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            MathText(
+              q.explanation,
+              style: textTheme.bodyMedium?.copyWith(height: 1.6),
+            ),
+            if (q.explanationImageUrl != null)
+              QuestionImage(imageUrl: q.explanationImageUrl!),
+          ],
         ),
       ),
     ];
@@ -130,7 +149,6 @@ class _SectionLabel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Text(
       text,
       style: TextStyle(

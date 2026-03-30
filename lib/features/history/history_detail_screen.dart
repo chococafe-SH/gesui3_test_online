@@ -11,10 +11,10 @@ class HistoryDetailScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final questionIds = record.questions.map((q) => q.questionId).toList();
+    final questionIdsString = record.questions.map((q) => q.questionId).join(',');
 
     // 必要な問題だけを取得
-    final questionsAsync = ref.watch(questionsForRecordProvider(questionIds));
+    final questionsAsync = ref.watch(questionsForRecordProvider(questionIdsString));
 
     return Scaffold(
       appBar: AppBar(
@@ -23,6 +23,9 @@ class HistoryDetailScreen extends ConsumerWidget {
       ),
       body: questionsAsync.when(
         data: (questionMap) {
+          if (record.questions.isEmpty) {
+            return const Center(child: Text('この履歴には詳細な回答データがありません。（古い履歴の可能性があります）'));
+          }
           return ListView.builder(
             padding: const EdgeInsets.all(16),
             itemCount: record.questions.length,
@@ -46,10 +49,10 @@ class HistoryDetailScreen extends ConsumerWidget {
               children: [
                 const Icon(Icons.error_outline, size: 48, color: Colors.red),
                 const SizedBox(height: 16),
-                const Text('データの読み込みに失敗しました', textAlign: TextAlign.center),
+                Text('データの読み込みに失敗しました\n$err', textAlign: TextAlign.center),
                 const SizedBox(height: 16),
                 ElevatedButton(
-                  onPressed: () => ref.invalidate(questionsForRecordProvider(questionIds)),
+                  onPressed: () => ref.invalidate(questionsForRecordProvider(questionIdsString)),
                   child: const Text('再試行'),
                 ),
               ],

@@ -13,7 +13,11 @@ extension ListChunk<T> on List<T> {
   }
 }
 
-final questionsForRecordProvider = FutureProvider.family<Map<String, Question>, List<String>>((ref, ids) async {
+final questionsForRecordProvider = FutureProvider.family<Map<String, Question>, String>((ref, joinedIds) async {
+  if (joinedIds.isEmpty) return {};
+  
+  // IDを分割し、重複排除と空文字削除を行う
+  final ids = joinedIds.split(',').where((id) => id.isNotEmpty).toSet().toList();
   if (ids.isEmpty) return {};
   
   final firestore = ref.watch(firestoreProvider);

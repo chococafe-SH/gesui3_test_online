@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../../shared/theme/app_colors.dart';
+import '../../../../shared/widgets/math_text.dart';
 
 enum OptionState {
   unselected,      // 未選択（クイズプレイ中）
@@ -153,7 +154,7 @@ class OptionTile extends StatelessWidget {
               ),
               const SizedBox(width: 12),
               Expanded(
-                child: Text(
+                child: MathText(
                   text,
                   style: TextStyle(
                     color: state.textColor(context),

@@ -1,34 +1,116 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    // ユーザードキュメント
-    match /users/{userId} {
-      allow read, update: if request.auth != null && request.auth.uid == userId;
-      allow create: if request.auth != null;
 
-      // 履歴
+    // ==============================================================
+    //  ヘルパー関数
+    // ==============================================================
+
+    // 自分自身かどうかを確認
+    function isOwner(userId) {
+      return request.auth != null && request.auth.uid == userId;
+    }
+
+    // ログイン済みかどうかを確認
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    // ユーザードキュメントの書き込みデータが有効なスキーマかを検証する
+    // 許可するトップレベルフィールドのみを許可する（isAdminなどの不正フィールドを弾く）
+    function isValidUserCreate() {
+      let allowed = ['id', 'isAnonymous', 'createdAt', 'stats'];
+      return request.resource.data.keys().hasOnly(allowed);
+    }
+
+    // ユーザー統計の更新が有効なスキーマかを検証する
+    // stats フィールド内のキーが許可リストに含まれるかを検証する
+    function isValidUserUpdate() {
+      // update は差分(diff)で届くため、変更されるキーのセットで確認する
+      let changedKeys = request.resource.data.diff(resource.data).changedKeys();
+      let allowed = [
+        'stats', 'isAnonymous', 'createdAt',
+        // dotNotation 経由で stats 内のフィールドが更新される場合
+        'stats.totalAnswered', 'stats.correctCount', 'stats.xp',
+        'stats.level', 'stats.currentStreak', 'stats.lastQuizDate',
+        'stats.lastActive', 'stats.weakQuestions', 'stats.categoryStats'
+      ];
+      return changedKeys.hasOnly(allowed);
+    }
+
+    // historyドキュメントの書き込みデータが有効なスキーマかを検証する
+    function isValidHistoryCreate() {
+      let allowed = ['playedAt', 'category', 'correctCount', 'totalQuestions', 'questions'];
+      return request.resource.data.keys().hasOnly(allowed)
+          && request.resource.data.correctCount is int
+          && request.resource.data.totalQuestions is int
+          && request.resource.data.correctCount >= 0
+          && request.resource.data.correctCount <= request.resource.data.totalQuestions;
+    }
+
+    // ==============================================================
+    //  ユーザードキュメント
+    //  ★ 自分自身のドキュメントのみ読み書き可能（他人は一切不可）
+    // ==============================================================
+    match /users/{userId} {
+      // 読み取り: 自分のドキュメントのみ
+      allow get: if isOwner(userId);
+
+      // ★ コレクション全体のリスト取得は完全禁止（全ユーザーのリスト漏洩防止）
+      allow list: if false;
+
+      // 作成: ログイン済み、かつ自分のUID、かつ有効なスキーマ
+      allow create: if isOwner(userId) && isValidUserCreate();
+
+      // 更新: 自分のドキュメントのみ、かつ許可されたフィールドのみ
+      allow update: if isOwner(userId) && isValidUserUpdate();
+
+      // 削除: 禁止
+      allow delete: if false;
+
+      // ----------------------------------------------------------
+      //  クイズ履歴サブコレクション
+      // ----------------------------------------------------------
       match /history/{id} {
-        allow read, create: if request.auth != null && request.auth.uid == userId;
+        // 読み取り・作成: 自分の履歴のみ
+        allow read: if isOwner(userId);
+        allow create: if isOwner(userId) && isValidHistoryCreate();
+        // 更新・削除: 一切禁止（改ざん防止）
         allow update, delete: if false;
       }
-      
-      // デバッグログ
+
+      // ----------------------------------------------------------
+      //  デバッグログサブコレクション
+      // ----------------------------------------------------------
       match /debug_logs/{id} {
-        allow create: if request.auth != null && request.auth.uid == userId;
+        // 作成のみ許可（自分のログのみ）
+        allow create: if isOwner(userId);
+        // 読み取り・更新・削除: 禁止
         allow read, update, delete: if false;
       }
     }
 
-    // 問題データ (読み取り専用)
+    // ==============================================================
+    //  問題データ (認証済みの場合のみ読み取り可能・書き込み不可)
+    // ==============================================================
     match /questions/{id} {
-      allow read: if request.auth != null;
+      allow read: if isAuthenticated();
       allow write: if false;
     }
-    
-    // カテゴリ (読み取り専用)
+
+    // ==============================================================
+    //  カテゴリ (認証済みの場合のみ読み取り可能・書き込み不可)
+    // ==============================================================
     match /categories/{id} {
-      allow read: if request.auth != null;
+      allow read: if isAuthenticated();
       allow write: if false;
+    }
+
+    // ==============================================================
+    //  その他のすべてのパスへのアクセスは完全に禁止（デフォルト拒否）
+    // ==============================================================
+    match /{document=**} {
+      allow read, write: if false;
     }
   }
 }

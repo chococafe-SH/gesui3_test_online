@@ -1,4 +1,4 @@
-id,category,text,options,correctOptionIndex,explanation
-q001,下水道法,下水道法第2条における下水の定義として正しいものは？,家庭下水のみ;雨水のみ;家庭下水と雨水;工業排水のみ,2,下水とは「生活若しくは事業に起因し、若しくは付随する廃水又は雨水をいう」と定義されています。
-q002,処理技術,活性汚泥法において微生物の塊を何と呼ぶか？,フロック;スカム;フロン;デトリタス,0,活性汚泥法では、微生物が凝集してフロック(floc)と呼ばれる塊を形成し、これが有機物を分解します。
-,未分類,新しい問題のサンプル,選択肢1;選択肢2;選択肢3;選択肢4,1,IDを空にすると、Firestore側で自動的に一意のIDが割り振られます。
+﻿"id,category,text,options,correctOptionIndex,explanation,imageUrl,explanationImageUrl"
+"q101,テスト区分,次の図は何を示しているか？,りんご;みかん;バナナ;レモン,0,解説文です。図の通りりんごが正解となります。,https://example.com/question.png,https://example.com/explanation.png"
+"q102,テスト区分,文字列のみの問題,A;B;C;D,2,画像がない場合はURLを空欄にしておきます。,,"
+",未分類,新しいサンプル問題,A案;B案;C案;D案,2,IDを空にするとFirestore側で自動的に一意なIDが付与されます。"
